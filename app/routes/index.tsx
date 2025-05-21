@@ -12,7 +12,7 @@ export default createRoute((c) => {
         <div class="mt-10 mb-4">
           <svg class="w-32 h-auto mx-auto mb-3" viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
             <path fill="#ff8c00" d="M220,75 L80,75 L80,50 C80,36.2 91.2,25 105,25 L195,25 C208.8,25 220,36.2 220,50 L220,75 Z M250,75 L220,75 L220,50 C220,36.2 208.8,25 195,25 L250,25 L250,75 Z M50,75 L80,75 L80,50 C80,36.2 91.2,25 105,25 L50,25 L50,75 Z" 
-                class="filter drop-shadow-[0_0_15px_rgba(255,140,0,0.5)]" />
+                class="logo-glow" />
           </svg>
         </div>
         
