@@ -11,9 +11,9 @@ export default createRoute((c) => {
         {/* Logo */}
         <div class="mt-10 mb-4">
           <img
-            src="/logo.png"
+            src="/logo.jpg"
             alt="Senju.dev Logo"
-            class="w-32 h-auto mx-auto mb-3 logo-glow"
+            class="w-60 h-auto mx-auto mb-3 logo-glow"
           />
         </div>
 
@@ -34,7 +34,6 @@ export default createRoute((c) => {
 
         {/* Events Section */}
         <Events />
-
       </div>
     </div>
   );
