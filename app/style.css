@@ -3,6 +3,11 @@
 /* Custom styles */
 .logo-glow {
   filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.5));
+  transition: filter 0.3s ease;
+}
+
+.logo-glow:hover {
+  filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.8));
 }
 
 .sponsor-logo {
