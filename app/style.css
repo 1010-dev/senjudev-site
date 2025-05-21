@@ -1,0 +1,17 @@
+@import 'tailwindcss' source('../app');
+
+/* Custom styles */
+.logo-glow {
+  filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.5));
+}
+
+.sponsor-logo {
+  filter: brightness(0.8);
+  opacity: 0.8;
+  transition: all 0.3s;
+}
+
+.sponsor-logo:hover {
+  filter: brightness(1);
+  opacity: 1;
+}
