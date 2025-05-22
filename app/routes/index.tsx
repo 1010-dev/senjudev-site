@@ -1,6 +1,5 @@
 import { createRoute } from "honox/factory";
 import Events from "../islands/events";
-import Sponsors from "../islands/sponsors";
 
 export default createRoute((c) => {
   return c.render(
