@@ -57,14 +57,17 @@ async function fetchConnpassEvents(
     );
 
     // ヘッダーを構築
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = {
+      "user-agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+    };
 
     // API Keyが提供されている場合はヘッダーに追加
     if (apiKey) {
       headers["X-API-Key"] = apiKey;
       console.log("Using API Key for authentication");
     } else {
-      console.log("No API Key provided, using public access");
+      throw new Error("No API Key provided, using public access");
     }
 
     const response = await fetch(url, {
@@ -169,7 +172,7 @@ export default createRoute(
       if (apiKey) {
         console.log("CONNPASS_API_KEY found in environment", apiKey);
       } else {
-        console.warn("CONNPASS_API_KEY not found, using public API access");
+        throw new Error("CONNPASS_API_KEY not found, using public API access");
       }
 
       // より多くのイベントを取得（過去分も含む）
@@ -221,9 +224,12 @@ export default createRoute(
       // エラー時はフォールバックデータを返す
       const fallbackData = getFallbackEvents();
       console.log("Returning fallback data");
+      const errorMessage = `Error fetching events: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
 
       return c.json(
-        { ...fallbackData, total: fallbackData.upcoming },
+        { ...fallbackData, total: fallbackData.upcoming, error: errorMessage },
         {
           status: 200, // クライアントエラーを避けるため200で返す
           headers: {
