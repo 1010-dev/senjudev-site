@@ -1,8 +1,15 @@
-import type {} from 'hono'
+import type {} from "hono";
 
-declare module 'hono' {
+declare module "hono" {
   interface Env {
-    Variables: {}
-    Bindings: {}
+    Variables: {};
+    Bindings: {
+      CONNPASS_API_KEY: string;
+    };
+  }
+  interface ContextRenderer {
+    (content: string | Promise<string>, head?: Head):
+      | Response
+      | Promise<Response>;
   }
 }

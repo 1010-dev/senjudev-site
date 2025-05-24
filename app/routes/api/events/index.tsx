@@ -164,7 +164,7 @@ export default createRoute(
       console.log("Fetching events from Connpass API...");
 
       // 環境変数からAPI Keyを取得
-      const apiKey = c.env?.CONNPASS_API_KEY;
+      const apiKey = c.env.CONNPASS_API_KEY;
 
       if (apiKey) {
         console.log("CONNPASS_API_KEY found in environment", apiKey);
