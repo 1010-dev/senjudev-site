@@ -59,7 +59,6 @@ export default function Events() {
   const [pastEvents, setPastEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showPastEvents, setShowPastEvents] = useState(false);
 
   // Helper function for fallback data
   const getFallbackData = (): { upcoming: Event[]; past: Event[] } => {
@@ -166,62 +165,102 @@ export default function Events() {
 
       <div id="events-content" tabindex="-1">
         {/* 開催予定のイベントセクション */}
-        {upcomingEvents.length > 0 && (
-          <div class="mb-12">
-            <div class="mb-6 text-center">
-              <h4 class="text-2xl font-bold text-white mb-2">📅 開催予定のイベント</h4>
+        <div class="mb-16">
+          <div class="mb-8 text-center">
+            <h4 class="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+              <span class="text-4xl">📅</span>
+              開催予定のイベント
+            </h4>
+            {upcomingEvents.length > 0 ? (
               <p class="text-blue-100 text-lg" aria-live="polite">
                 {upcomingEvents.length}件の予定されたイベントがあります
               </p>
-            </div>
+            ) : (
+              <p class="text-blue-200 text-lg">
+                現在予定されているイベントはありません
+              </p>
+            )}
+          </div>
+          
+          {upcomingEvents.length > 0 ? (
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {upcomingEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div class="bg-white/95 backdrop-blur-lg border-2 border-blue-200/30 rounded-xl p-8 text-center max-w-2xl mx-auto">
+              <div class="text-6xl mb-4" role="img" aria-label="カレンダー">📅</div>
+              <h5 class="text-xl font-bold text-gray-800 mb-4">
+                現在予定されているイベントはありません
+              </h5>
+              <p class="text-gray-600 mb-6 leading-relaxed">
+                新しいイベントが開催されると、ここに表示されます。<br />
+                DiscordやConnpassで最新情報をチェックしてください！
+              </p>
+              <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a
+                  href="https://discord.gg/gMgdDhbjVg"
+                  class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-orange-300 flex items-center gap-2 justify-center border-2 border-transparent hover:border-orange-200"
+                  aria-label="千住.dev Discordコミュニティに参加する（新しいタブで開きます）"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <DiscordIcon className="w-4 h-4" />
+                  Discord に参加
+                </a>
+                <a
+                  href="https://senju.connpass.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-2 justify-center border-2 border-transparent hover:border-blue-200"
+                  aria-label="connpassで千住.devのイベントをチェックする（新しいタブで開きます）"
+                >
+                  <ConnpassIcon className="w-4 h-4" />
+                  connpass をチェック
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* 過去のイベントセクション */}
-        {pastEvents.length > 0 && (
-          <div class="mb-12">
-            <div class="mb-6 text-center">
-              <button
-                onClick={() => setShowPastEvents(!showPastEvents)}
-                class="bg-white/20 hover:bg-white/30 text-white font-bold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-3 mx-auto focus:outline-none focus:ring-4 focus:ring-blue-300"
-                aria-expanded={showPastEvents}
-                aria-controls="past-events-section"
-              >
-                <span class="text-xl">📚</span>
-                過去のイベントを見る ({pastEvents.length}件)
-                <span class={`transition-transform duration-300 ${showPastEvents ? 'rotate-180' : ''}`}>▼</span>
-              </button>
-            </div>
-            
-            {showPastEvents && (
-              <div id="past-events-section" class="animate-in slide-in-from-top-4 duration-300">
-                <div class="mb-4 text-center">
-                  <p class="text-blue-100 text-lg" aria-live="polite">
-                    {pastEvents.length}件の過去のイベント
-                  </p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {pastEvents.map((event) => (
-                    <EventCard key={event.id} event={event} isPast={true} />
-                  ))}
-                </div>
-              </div>
+        <div class="mb-12">
+          <div class="mb-8 text-center">
+            <h4 class="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+              <span class="text-4xl">📚</span>
+              過去のイベント
+            </h4>
+            {pastEvents.length > 0 ? (
+              <p class="text-blue-100 text-lg" aria-live="polite">
+                直近{pastEvents.length}件の過去のイベント
+              </p>
+            ) : (
+              <p class="text-blue-200 text-lg">
+                まだ過去のイベントはありません
+              </p>
             )}
           </div>
-        )}
-
-        {/* イベントがない場合の表示 */}
-        {upcomingEvents.length === 0 && pastEvents.length === 0 && !loading && !error && (
-          <div class="text-center">
-            <div class="text-6xl mb-4">📅</div>
-            <p class="text-blue-100 text-lg">現在、表示できるイベントがありません</p>
-          </div>
-        )}
+          
+          {pastEvents.length > 0 ? (
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {pastEvents.map((event) => (
+                <EventCard key={event.id} event={event} isPast={true} />
+              ))}
+            </div>
+          ) : (
+            <div class="bg-white/90 backdrop-blur-lg border-2 border-gray-200/50 rounded-xl p-8 text-center max-w-2xl mx-auto">
+              <div class="text-6xl mb-4" role="img" aria-label="本">📚</div>
+              <h5 class="text-xl font-bold text-gray-700 mb-4">
+                まだ過去のイベントはありません
+              </h5>
+              <p class="text-gray-600 leading-relaxed">
+                コミュニティが始まったばかりです。<br />
+                開催されたイベントの履歴がこちらに表示されます。
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
