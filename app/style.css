@@ -1,17 +1,68 @@
 @import 'tailwindcss' source('../app');
 
-/* Custom styles */
-.logo-glow {
-  filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.5));
+/* 最小限のカスタムCSS */
+:root {
+  --senju-blue: #2563eb;
+  --arakawa-navy: #1e3a8a;
+  --bridge-orange: #ea580c;
+  --rainbow-purple: #7c3aed;
+  --nature-green: #059669;
 }
 
-.sponsor-logo {
-  filter: brightness(0.8);
-  opacity: 0.8;
-  transition: all 0.3s;
+/* Tailwindで実現できないアニメーション */
+@keyframes arakawa-flow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-.sponsor-logo:hover {
-  filter: brightness(1);
-  opacity: 1;
+@keyframes rainbow-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.arakawa-flow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb 0%, #7c3aed 25%, #059669 50%, #ea580c 75%, #2563eb 100%);
+  animation: arakawa-flow 4s ease-in-out infinite;
+}
+
+.rainbow-loading {
+  background: linear-gradient(90deg, #2563eb 0%, #7c3aed 25%, #059669 50%, #ea580c 75%, #2563eb 100%);
+  background-size: 200% 100%;
+  animation: rainbow-flow 2.5s ease-in-out infinite;
+}
+
+/* スクリーンリーダー専用 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* スキップリンク */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--senju-blue);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 4px;
+}
+
+.skip-link:focus {
+  top: 6px;
 }
