@@ -1,0 +1,53 @@
+{
+  "name": "千住.dev - 千住エリア開発者コミュニティ",
+  "short_name": "千住.dev",
+  "description": "千住エリアを中心とした足立区で活動するエンジニア・デザイナー・クリエイターのためのコミュニティ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "categories": ["developer", "community", "events"],
+  "lang": "ja",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "イベント一覧",
+      "short_name": "イベント",
+      "description": "開催予定のイベントを確認",
+      "url": "/#events",
+      "icons": [
+        {
+          "src": "/icon-event.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Discord参加",
+      "short_name": "Discord",
+      "description": "千住.dev Discordに参加",
+      "url": "https://discord.gg/gMgdDhbjVg",
+      "icons": [
+        {
+          "src": "/icon-discord.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}
