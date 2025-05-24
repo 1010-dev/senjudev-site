@@ -34,20 +34,36 @@ type Event = {
 };
 
 type ApiResponse = {
-  events: Event[];
-  results_returned: number;
-  results_available: number;
-  results_start: number;
+  upcoming: {
+    events: Event[];
+    results_returned: number;
+    results_available: number;
+    results_start: number;
+  };
+  past: {
+    events: Event[];
+    results_returned: number;
+    results_available: number;
+    results_start: number;
+  };
+  total: {
+    events: Event[];
+    results_returned: number;
+    results_available: number;
+    results_start: number;
+  };
 };
 
 export default function Events() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [pastEvents, setPastEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showPastEvents, setShowPastEvents] = useState(false);
 
   // Helper function for fallback data
-  const getFallbackData = (): Event[] => {
-    return [];
+  const getFallbackData = (): { upcoming: Event[]; past: Event[] } => {
+    return { upcoming: [], past: [] };
   };
 
   useEffect(() => {
@@ -63,16 +79,9 @@ export default function Events() {
         const data: ApiResponse = await response.json();
         console.log("Connpass API response:", data);
 
-        // Check if we got any events back
-        if (data.events && data.events.length > 0) {
-          setEvents(data.events);
-        } else {
-          console.log(
-            "No events found in the API response, using fallback data"
-          );
-          // Use fallback data if no events were returned
-          setEvents(getFallbackData());
-        }
+        // Set upcoming and past events
+        setUpcomingEvents(data.upcoming.events || []);
+        setPastEvents(data.past.events || []);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching events:", err);
@@ -81,7 +90,9 @@ export default function Events() {
         );
 
         // Use fallback data on error
-        setEvents(getFallbackData());
+        const fallbackData = getFallbackData();
+        setUpcomingEvents(fallbackData.upcoming);
+        setPastEvents(fallbackData.past);
         setLoading(false);
       }
     };
@@ -89,6 +100,135 @@ export default function Events() {
     fetchEvents();
   }, []);
 
+  return (
+    <div>
+      {/* スキップリンク */}
+      <a href="#events-content" class="skip-link">イベント一覧へスキップ</a>
+
+      {loading && (
+        <div class="flex flex-col items-center justify-center py-12 bg-white/95 backdrop-blur-lg rounded-xl mx-4" role="status" aria-live="polite">
+          <LoadingSpinner />
+        </div>
+      )}
+
+      {error && (
+        <div class="bg-red-50/95 backdrop-blur-lg border-2 border-red-200 rounded-xl p-6 text-center border-l-4 border-l-red-500" role="alert" aria-live="assertive">
+          <div class="text-red-700 text-xl font-bold mb-3">⚠️ エラーが発生しました</div>
+          <p class="text-red-600 mb-4 text-lg">{error}</p>
+          <p class="text-gray-700 mb-6">しばらくしてから再度お試しください</p>
+          <a
+            href="https://senju.connpass.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-3 justify-center min-h-[44px] border-2 border-transparent hover:border-blue-200 inline-flex"
+            aria-label="connpassで千住.devのイベントを直接確認する（新しいタブで開きます）"
+          >
+            <ConnpassIcon className="w-5 h-5" />
+            connpassで直接確認する
+          </a>
+        </div>
+      )}
+
+      {!loading && !error && upcomingEvents.length === 0 && pastEvents.length === 0 && (
+        <div class="bg-white/95 backdrop-blur-lg border-2 border-gray-200 rounded-xl p-8 text-center" role="status" aria-live="polite">
+          <div class="text-8xl mb-6" role="img" aria-label="カレンダー">📅</div>
+          <h4 class="text-2xl font-bold text-gray-800 mb-4">
+            現在予定されているイベントはありません
+          </h4>
+          <p class="text-gray-600 mb-8 text-lg leading-relaxed">
+            新しいイベントが開催されると、ここに表示されます。<br />
+            Discordやconnpassで最新情報をチェックしてください！
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://discord.gg/gMgdDhbjVg"
+              class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-orange-300 flex items-center gap-3 justify-center min-h-[44px] border-2 border-transparent hover:border-orange-200"
+              aria-label="千住.dev Discordコミュニティに参加する（新しいタブで開きます）"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <DiscordIcon className="w-5 h-5" />
+              Discord に参加
+            </a>
+            <a
+              href="https://senju.connpass.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-3 justify-center min-h-[44px] border-2 border-transparent hover:border-blue-200"
+              aria-label="connpassで千住.devのイベントをチェックする（新しいタブで開きます）"
+            >
+              <ConnpassIcon className="w-5 h-5" />
+              connpass をチェック
+            </a>
+          </div>
+        </div>
+      )}
+
+      <div id="events-content" tabindex="-1">
+        {/* 開催予定のイベントセクション */}
+        {upcomingEvents.length > 0 && (
+          <div class="mb-12">
+            <div class="mb-6 text-center">
+              <h4 class="text-2xl font-bold text-white mb-2">📅 開催予定のイベント</h4>
+              <p class="text-blue-100 text-lg" aria-live="polite">
+                {upcomingEvents.length}件の予定されたイベントがあります
+              </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {upcomingEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 過去のイベントセクション */}
+        {pastEvents.length > 0 && (
+          <div class="mb-12">
+            <div class="mb-6 text-center">
+              <button
+                onClick={() => setShowPastEvents(!showPastEvents)}
+                class="bg-white/20 hover:bg-white/30 text-white font-bold px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-3 mx-auto focus:outline-none focus:ring-4 focus:ring-blue-300"
+                aria-expanded={showPastEvents}
+                aria-controls="past-events-section"
+              >
+                <span class="text-xl">📚</span>
+                過去のイベントを見る ({pastEvents.length}件)
+                <span class={`transition-transform duration-300 ${showPastEvents ? 'rotate-180' : ''}`}>▼</span>
+              </button>
+            </div>
+            
+            {showPastEvents && (
+              <div id="past-events-section" class="animate-in slide-in-from-top-4 duration-300">
+                <div class="mb-4 text-center">
+                  <p class="text-blue-100 text-lg" aria-live="polite">
+                    {pastEvents.length}件の過去のイベント
+                  </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {pastEvents.map((event) => (
+                    <EventCard key={event.id} event={event} isPast={true} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* イベントがない場合の表示 */}
+        {upcomingEvents.length === 0 && pastEvents.length === 0 && !loading && !error && (
+          <div class="text-center">
+            <div class="text-6xl mb-4">📅</div>
+            <p class="text-blue-100 text-lg">現在、表示できるイベントがありません</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// イベントカードコンポーネント
+function EventCard({ event, isPast = false }: { event: Event; isPast?: boolean }) {
   // Format date from ISO string to Japanese format
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -124,7 +264,7 @@ export default function Events() {
     const eventDate = new Date(event.started_at);
     
     // 過去のイベントかチェック
-    if (eventDate < now) {
+    if (eventDate < now || isPast) {
       return "開催済み";
     }
     
@@ -292,229 +432,5 @@ export default function Events() {
         </div>
       </a>
     </article>
-  );
-}-bold text-xs px-4 py-2 rounded-full border-2 border-green-400/30 min-w-[120px] text-center inline-block uppercase tracking-wide";
-      case "補欠者募集中":
-        return "bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold text-xs px-4 py-2 rounded-full border-2 border-yellow-400/30 min-w-[120px] text-center inline-block uppercase tracking-wide";
-      case "開催済み":
-        return "bg-gray-100 text-gray-600 font-semibold text-xs px-4 py-2 rounded-full border-2 border-gray-200 min-w-[120px] text-center inline-block uppercase tracking-wide";
-      case "募集終了":
-      case "満員":
-        return "bg-gradient-to-r from-gray-500 to-gray-600 text-white font-bold text-xs px-4 py-2 rounded-full border-2 border-gray-400/30 min-w-[120px] text-center inline-block uppercase tracking-wide";
-      default:
-        return "bg-gray-100 text-gray-600 font-semibold text-xs px-4 py-2 rounded-full border-2 border-gray-200 min-w-[120px] text-center inline-block uppercase tracking-wide";
-    }
-  };
-
-  // 参加者情報のフォーマット
-  const formatParticipants = (event: Event) => {
-    const total = event.limit === 0 ? "無制限" : `${event.limit}名`;
-    let text = `参加者 ${event.accepted}名 / ${total}`;
-    if (event.waiting > 0) {
-      text += ` (補欠 ${event.waiting}名)`;
-    }
-    return text;
-  };
-
-  // スクリーンリーダー用の詳細説明
-  const getEventAriaLabel = (event: Event) => {
-    const status = getEventStatus(event);
-    const date = formatDateForScreen(event.started_at);
-    const place = event.place || event.address || "場所未定";
-    const participants = formatParticipants(event);
-    
-    return `${event.title}。${date}。場所：${place}。${participants}。ステータス：${status}。詳細を見るにはクリックまたはエンターキーを押してください。`;
-  };
-
-  return (
-    <div>
-      {/* スキップリンク */}
-      <a href="#events-content" class="skip-link">イベント一覧へスキップ</a>
-
-      {loading && (
-        <div class="flex flex-col items-center justify-center py-12 bg-white/95 backdrop-blur-lg rounded-xl mx-4" role="status" aria-live="polite">
-          <LoadingSpinner />
-        </div>
-      )}
-
-      {error && (
-        <div class="bg-red-50/95 backdrop-blur-lg border-2 border-red-200 rounded-xl p-6 text-center border-l-4 border-l-red-500" role="alert" aria-live="assertive">
-          <div class="text-red-700 text-xl font-bold mb-3">⚠️ エラーが発生しました</div>
-          <p class="text-red-600 mb-4 text-lg">{error}</p>
-          <p class="text-gray-700 mb-6">しばらくしてから再度お試しください</p>
-          <a
-            href="https://senju.connpass.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-3 justify-center min-h-[44px] border-2 border-transparent hover:border-blue-200 inline-flex"
-            aria-label="connpassで千住.devのイベントを直接確認する（新しいタブで開きます）"
-          >
-            <ConnpassIcon className="w-5 h-5" />
-            connpassで直接確認する
-          </a>
-        </div>
-      )}
-
-      {!loading && !error && events.length === 0 && (
-        <div class="bg-white/95 backdrop-blur-lg border-2 border-gray-200 rounded-xl p-8 text-center" role="status" aria-live="polite">
-          <div class="text-8xl mb-6" role="img" aria-label="カレンダー">📅</div>
-          <h4 class="text-2xl font-bold text-gray-800 mb-4">
-            現在予定されているイベントはありません
-          </h4>
-          <p class="text-gray-600 mb-8 text-lg leading-relaxed">
-            新しいイベントが開催されると、ここに表示されます。<br />
-            Discordやconnpassで最新情報をチェックしてください！
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://discord.gg/gMgdDhbjVg"
-              class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-orange-300 flex items-center gap-3 justify-center min-h-[44px] border-2 border-transparent hover:border-orange-200"
-              aria-label="千住.dev Discordコミュニティに参加する（新しいタブで開きます）"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <DiscordIcon className="w-5 h-5" />
-              Discord に参加
-            </a>
-            <a
-              href="https://senju.connpass.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-3 justify-center min-h-[44px] border-2 border-transparent hover:border-blue-200"
-              aria-label="connpassで千住.devのイベントをチェックする（新しいタブで開きます）"
-            >
-              <ConnpassIcon className="w-5 h-5" />
-              connpass をチェック
-            </a>
-          </div>
-        </div>
-      )}
-
-      <div id="events-content" tabindex="-1">
-        {events.length > 0 && (
-          <div class="mb-6 text-center">
-            <p class="text-blue-100 text-lg" aria-live="polite">
-              {events.length}件のイベントが見つかりました
-            </p>
-          </div>
-        )}
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => (
-            <article key={event.id} class="bg-white/98 backdrop-blur-lg border-2 border-blue-200/20 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:bg-white hover:border-blue-300/40 min-h-[280px] group">
-              <a
-                href={event.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={getEventAriaLabel(event)}
-                class="block h-full focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 rounded-lg"
-              >
-                {/* イベント画像 */}
-                {event.image_url && (
-                  <div class="relative overflow-hidden rounded-lg mb-4">
-                    <img
-                      src={event.image_url}
-                      alt=""
-                      class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div class="absolute top-3 right-3">
-                      <span 
-                        class={getEventStatusClass(event)}
-                        role="status"
-                        aria-label={`イベントステータス: ${getEventStatus(event)}`}
-                      >
-                        {getEventStatus(event)}
-                      </span>
-                    </div>
-                  </div>
-                )}
-                
-                {/* イベントタイトル */}
-                <h4 class="text-xl font-bold mb-3 text-gray-900 group-hover:text-blue-900 transition-colors line-clamp-2 min-h-[3.5rem] leading-tight">
-                  {event.title}
-                </h4>
-                
-                {/* イベント概要 */}
-                {event.catch && (
-                  <p class="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[2.5rem] leading-relaxed">
-                    {event.catch}
-                  </p>
-                )}
-                
-                {/* イベント詳細情報 */}
-                <div class="space-y-4 mb-6">
-                  {/* 日時 */}
-                  <div class="flex items-start gap-3">
-                    <span 
-                      class="text-blue-600 text-xl mt-1 flex-shrink-0" 
-                      role="img" 
-                      aria-label="日時"
-                    >
-                      📅
-                    </span>
-                    <div class="flex-1">
-                      <div class="text-blue-700 font-bold text-base">
-                        {formatDate(event.started_at)}
-                      </div>
-                      <div class="sr-only">
-                        {formatDateForScreen(event.started_at)}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* 場所 */}
-                  <div class="flex items-start gap-3">
-                    <span 
-                      class="text-orange-600 text-xl mt-1 flex-shrink-0" 
-                      role="img" 
-                      aria-label="場所"
-                    >
-                      📍
-                    </span>
-                    <div class="text-blue-800 font-semibold text-sm flex-1 break-words">
-                      {event.place || event.address || "場所未定"}
-                    </div>
-                  </div>
-                  
-                  {/* 参加者数 */}
-                  <div class="flex items-start gap-3">
-                    <span 
-                      class="text-green-600 text-xl mt-1 flex-shrink-0" 
-                      role="img" 
-                      aria-label="参加者数"
-                    >
-                      👥
-                    </span>
-                    <div class="text-green-700 font-semibold text-sm flex-1">
-                      <span class="font-bold text-gray-800">{event.accepted}</span>
-                      <span class="text-gray-600">
-                        /{event.limit === 0 ? "∞" : event.limit}名
-                      </span>
-                      {event.waiting > 0 && (
-                        <div class="text-orange-600 font-semibold mt-1">
-                          補欠 {event.waiting}名
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* フッター情報 */}
-                <div class="border-t-2 border-gray-100 pt-4 flex items-center justify-between">
-                  <div class="text-sm text-gray-500 font-medium">
-                    {event.group.title}
-                  </div>
-                  <div class="text-sm text-blue-600 font-bold flex items-center gap-2 group-hover:text-blue-800">
-                    詳細を見る
-                    <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }
