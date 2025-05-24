@@ -73,7 +73,7 @@ export default createRoute((c) => {
           {/* イベントセクション */}
           <section id="events">
             <h3 class="text-4xl font-bold text-center mb-12 text-white relative">
-              開催予定のイベント
+              イベント情報
               <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 mt-2"></div>
             </h3>
             <Events />
