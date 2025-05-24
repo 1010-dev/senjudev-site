@@ -167,7 +167,7 @@ export default createRoute(
       const apiKey = c.env?.CONNPASS_API_KEY;
 
       if (apiKey) {
-        console.log("CONNPASS_API_KEY found in environment");
+        console.log("CONNPASS_API_KEY found in environment", apiKey);
       } else {
         console.warn("CONNPASS_API_KEY not found, using public API access");
       }
