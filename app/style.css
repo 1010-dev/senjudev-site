@@ -55,25 +55,27 @@
 
 /* スキップリンク */
 .skip-link {
-  position: absolute;
-  top: -40px;
-  left: 6px;
+  position: fixed;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
   background: #1e40af;
   color: white;
-  padding: 12px 16px;
+  padding: 12px 20px;
   text-decoration: none;
-  z-index: 100;
+  z-index: 9999;
   border-radius: 8px;
   font-weight: bold;
   font-size: 16px;
   border: 3px solid #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .skip-link:focus {
-  top: 6px;
-  transform: scale(1.05);
+  top: 10px;
+  transform: translateX(-50%) scale(1.05);
   outline: 3px solid #fbbf24;
   outline-offset: 2px;
 }
