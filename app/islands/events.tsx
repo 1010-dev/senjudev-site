@@ -104,7 +104,7 @@ export default function Events() {
 
       {loading && (
         <div
-          class="flex flex-col items-center justify-center py-12 bg-white/95 backdrop-blur-lg rounded-xl mx-4"
+          class="flex flex-col items-center justify-center py-12 bg-white border border-gray-200 rounded-xl mx-4"
           role="status"
           aria-live="polite"
         >
@@ -114,7 +114,7 @@ export default function Events() {
 
       {error && (
         <div
-          class="bg-red-50/95 backdrop-blur-lg border-2 border-red-200 rounded-xl p-6 text-center border-l-4 border-l-red-500"
+          class="bg-red-50 border border-red-200 rounded-xl p-6 text-center border-l-4 border-l-red-500"
           role="alert"
           aria-live="assertive"
         >
@@ -127,7 +127,7 @@ export default function Events() {
             href="https://senju.connpass.com/"
             target="_blank"
             rel="noopener noreferrer"
-            class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-3 justify-center min-h-[44px] border-2 border-transparent hover:border-blue-200 inline-flex"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-4 rounded-lg transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-3 justify-center min-h-[44px] inline-flex"
             aria-label="connpassで千住.devのイベントを直接確認する（新しいタブで開きます）"
           >
             <ConnpassIcon className="w-5 h-5" />
@@ -140,16 +140,16 @@ export default function Events() {
         {/* 開催予定のイベントセクション */}
         <div class="mb-16">
           <div class="mb-8 text-center">
-            <h4 class="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+            <h4 class="text-3xl font-bold text-gray-800 mb-3 flex items-center justify-center gap-3">
               <span class="text-4xl">📅</span>
               開催予定のイベント
             </h4>
             {upcomingEvents.length > 0 ? (
-              <p class="text-blue-100 text-lg" aria-live="polite">
+              <p class="text-gray-700 text-lg" aria-live="polite">
                 {upcomingEvents.length}件の予定されたイベントがあります
               </p>
             ) : (
-              <p class="text-blue-200 text-lg">
+              <p class="text-gray-600 text-lg">
                 現在予定されているイベントはありません
               </p>
             )}
@@ -162,7 +162,7 @@ export default function Events() {
               ))}
             </div>
           ) : (
-            <div class="bg-white/95 backdrop-blur-lg border-2 border-blue-200/30 rounded-xl p-8 text-center max-w-2xl mx-auto">
+            <div class="bg-white border border-gray-200 rounded-xl p-8 text-center max-w-2xl mx-auto">
               <div class="text-6xl mb-4" role="img" aria-label="カレンダー">
                 📅
               </div>
@@ -177,7 +177,7 @@ export default function Events() {
               <div class="flex flex-col sm:flex-row gap-3 justify-center">
                 <a
                   href="https://discord.gg/gMgdDhbjVg"
-                  class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-orange-300 flex items-center gap-2 justify-center border-2 border-transparent hover:border-orange-200"
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-2 justify-center"
                   aria-label="千住.dev Discordコミュニティに参加する（新しいタブで開きます）"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -189,7 +189,7 @@ export default function Events() {
                   href="https://senju.connpass.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center gap-2 justify-center border-2 border-transparent hover:border-blue-200"
+                  class="bg-gray-600 hover:bg-gray-700 text-white font-medium px-6 py-3 rounded-lg transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 flex items-center gap-2 justify-center"
                   aria-label="connpassで千住.devのイベントをチェックする（新しいタブで開きます）"
                 >
                   <ConnpassIcon className="w-4 h-4" />
@@ -203,16 +203,16 @@ export default function Events() {
         {/* 過去のイベントセクション */}
         <div class="mb-12">
           <div class="mb-8 text-center">
-            <h4 class="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+            <h4 class="text-3xl font-bold text-gray-800 mb-3 flex items-center justify-center gap-3">
               <span class="text-4xl">📚</span>
               過去のイベント
             </h4>
             {pastEvents.length > 0 ? (
-              <p class="text-blue-100 text-lg" aria-live="polite">
+              <p class="text-gray-700 text-lg" aria-live="polite">
                 直近{pastEvents.length}件の過去のイベント
               </p>
             ) : (
-              <p class="text-blue-200 text-lg">
+              <p class="text-gray-600 text-lg">
                 まだ過去のイベントはありません
               </p>
             )}
@@ -225,7 +225,7 @@ export default function Events() {
               ))}
             </div>
           ) : (
-            <div class="bg-white/90 backdrop-blur-lg border-2 border-gray-200/50 rounded-xl p-8 text-center max-w-2xl mx-auto">
+            <div class="bg-white border border-gray-200 rounded-xl p-8 text-center max-w-2xl mx-auto">
               <div class="text-6xl mb-4" role="img" aria-label="本">
                 📚
               </div>
@@ -319,16 +319,16 @@ function EventCard({
     const status = getEventStatus(event);
     switch (status) {
       case "参加者募集中":
-        return "bg-gradient-to-r from-green-500 to-green-600 text-white font-bold text-xs px-4 py-2 rounded-full border-2 border-green-400/30 min-w-[120px] text-center inline-block uppercase tracking-wide";
+        return "bg-green-600 text-white font-medium text-xs px-4 py-2 rounded-full min-w-[120px] text-center inline-block";
       case "補欠者募集中":
-        return "bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold text-xs px-4 py-2 rounded-full border-2 border-yellow-400/30 min-w-[120px] text-center inline-block uppercase tracking-wide";
+        return "bg-yellow-500 text-white font-medium text-xs px-4 py-2 rounded-full min-w-[120px] text-center inline-block";
       case "開催済み":
-        return "bg-gray-100 text-gray-600 font-semibold text-xs px-4 py-2 rounded-full border-2 border-gray-200 min-w-[120px] text-center inline-block uppercase tracking-wide";
+        return "bg-gray-100 text-gray-600 font-medium text-xs px-4 py-2 rounded-full min-w-[120px] text-center inline-block";
       case "募集終了":
       case "満員":
-        return "bg-gradient-to-r from-gray-500 to-gray-600 text-white font-bold text-xs px-4 py-2 rounded-full border-2 border-gray-400/30 min-w-[120px] text-center inline-block uppercase tracking-wide";
+        return "bg-gray-500 text-white font-medium text-xs px-4 py-2 rounded-full min-w-[120px] text-center inline-block";
       default:
-        return "bg-gray-100 text-gray-600 font-semibold text-xs px-4 py-2 rounded-full border-2 border-gray-200 min-w-[120px] text-center inline-block uppercase tracking-wide";
+        return "bg-gray-100 text-gray-600 font-medium text-xs px-4 py-2 rounded-full min-w-[120px] text-center inline-block";
     }
   };
 
@@ -354,7 +354,7 @@ function EventCard({
 
   return (
     <article
-      class={`bg-white/98 backdrop-blur-lg border-2 border-blue-200/20 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:bg-white hover:border-blue-300/40 min-h-[280px] group ${
+      class={`bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow min-h-[280px] group ${
         isPast ? "opacity-90" : ""
       }`}
     >

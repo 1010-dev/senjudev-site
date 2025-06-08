@@ -31,14 +31,15 @@ export default jsxRenderer(({ children }) => {
         <meta name="twitter:image" content="https://senju.dev/og-image.jpg" />
 
         {/* その他のメタタグ */}
-        <meta name="theme-color" content="#1e3a8a" />
+        <meta name="theme-color" content="#374151" />
         <meta name="robots" content="noindex, nofollow" />
         <link rel="canonical" href="https://senju.dev" />
 
         {/* ファビコン */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
+        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="manifest" href="/manifest.json" />
 
         {/* スタイルとスクリプト */}
