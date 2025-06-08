@@ -5,10 +5,6 @@ import { DiscordIcon, ConnpassIcon } from "../components/icons";
 export default createRoute((c) => {
   return c.render(
     <div class="bg-blue-900 text-white min-h-screen relative overflow-hidden">
-      {/* スキップリンク */}
-      <a href="#main-content" class="skip-link">
-        メインコンテンツへスキップ
-      </a>
       {/* 荒川をイメージした背景グラデーション */}
       <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900"></div>
 
