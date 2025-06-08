@@ -12,7 +12,7 @@ export default createRoute((c) => {
           {/* ロゴ */}
           <div class="mb-6 inline-block">
             <img
-              src="/logo-simple.svg"
+              src="/logo-simple.png"
               alt="Senju.dev - 千住大橋をモチーフとしたロゴ"
               class="w-64 h-auto mx-auto"
             />
