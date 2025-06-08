@@ -101,10 +101,6 @@ export default function Events() {
 
   return (
     <div>
-      {/* スキップリンク */}
-      <a href="#events-content" class="skip-link">
-        イベント一覧へスキップ
-      </a>
 
       {loading && (
         <div

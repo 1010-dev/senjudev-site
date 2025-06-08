@@ -17,7 +17,7 @@ export default createRoute((c) => {
 
       <div class="max-w-6xl mx-auto px-6 py-8 relative z-10">
         {/* ヘッダー */}
-        <header class="text-center py-8">
+        <header class="text-center py-8" role="banner">
           {/* ロゴ */}
           <div class="mb-6 inline-block bg-white">
             <img
@@ -29,15 +29,17 @@ export default createRoute((c) => {
 
           {/* サイトタイトル */}
           <h1 class="text-6xl font-bold text-white mb-2 relative">
-            senju.dev
+            <span class="sr-only">千住ドット開発</span>
+            <span aria-hidden="true">senju.dev</span>
             <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 "></div>
           </h1>
           <h2 class="text-2xl text-blue-200 mb-4">
-            千住エリア技術コミュニティ
+            <span class="sr-only">千住エリア技術コミュニティのウェブサイトです。</span>
+            <span aria-hidden="true">千住エリア技術コミュニティ</span>
           </h2>
 
           {/* 荒川の流れをイメージした装飾 */}
-          <div class="relative w-96 max-w-md mx-auto h-1 bg-blue-800 rounded-full overflow-hidden mb-6 arakawa-flow"></div>
+          <div class="relative w-96 max-w-md mx-auto h-1 bg-blue-800 rounded-full overflow-hidden mb-6 arakawa-flow" role="img" aria-label="荒川の流れをイメージしたアニメーション装飾"></div>
 
           <p class="text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
             千住エリアを中心とした足立区で活動する
@@ -69,23 +71,23 @@ export default createRoute((c) => {
         </header>
 
         {/* メインコンテンツエリア */}
-        <main class="mt-16">
+        <main class="mt-16" id="main-content" role="main">
           {/* イベントセクション */}
-          <section id="events">
-            <h3 class="text-4xl font-bold text-center mb-12 text-white relative">
+          <section id="events" aria-labelledby="events-heading">
+            <h3 id="events-heading" class="text-4xl font-bold text-center mb-12 text-white relative">
               イベント情報
-              <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 mt-2"></div>
+              <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 mt-2" aria-hidden="true"></div>
             </h3>
             <Events />
           </section>
 
           {/* コミュニティ情報セクション */}
-          <section class="mt-20">
+          <section class="mt-20" aria-labelledby="about-heading">
             <div class="max-w-2xl mx-auto">
               {/* About */}
               <div class="bg-white/95 backdrop-blur-lg border-2 border-blue-200/20 rounded-xl p-8 text-gray-800 text-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:border-blue-300/30">
-                <h4 class="text-2xl font-bold mb-6 text-blue-900">
-                  🏠 About senju.dev
+                <h4 id="about-heading" class="text-2xl font-bold mb-6 text-blue-900">
+                  <span class="text-2xl" role="img" aria-label="家のアイコン">🏠</span> About senju.dev
                 </h4>
                 <p class="text-gray-700 leading-relaxed text-lg">
                   千住大橋と荒川で結ばれる千住エリアを拠点とした技術コミュニティ。
@@ -98,11 +100,11 @@ export default createRoute((c) => {
         </main>
 
         {/* フッター */}
-        <footer class="mt-20 pt-8 border-t border-blue-800/30">
+        <footer class="mt-20 pt-8 border-t border-blue-800/30" role="contentinfo">
           <div class="text-center">
-            <div class="relative w-80 max-w-xs mx-auto h-1 bg-blue-800 rounded-full overflow-hidden mb-6 arakawa-flow"></div>
+            <div class="relative w-80 max-w-xs mx-auto h-1 bg-blue-800 rounded-full overflow-hidden mb-6 arakawa-flow" role="img" aria-label="荒川の流れをイメージしたアニメーション装飾"></div>
             <p class="text-blue-200 mb-4">千住.dev コミュニティ</p>
-            <div class="flex justify-center space-x-6 text-sm">
+            <nav aria-label="外部リンク" class="flex justify-center space-x-6 text-sm">
               <a
                 href="https://discord.gg/gMgdDhbjVg"
                 class="text-blue-300 hover:text-white transition-colors flex items-center gap-2 hover:underline"
@@ -125,7 +127,7 @@ export default createRoute((c) => {
               >
                 GitHub
               </a>
-            </div>
+            </nav>
             <p class="text-blue-400 text-xs mt-4">
               © 2025 senju.dev - 荒川と千住大橋が結ぶ技術コミュニティ
             </p>

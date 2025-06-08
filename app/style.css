@@ -1,12 +1,15 @@
 @import 'tailwindcss' source('../app');
 
-/* 最小限のカスタムCSS */
+/* アクセシビリティを考慮したカスタムCSS */
 :root {
-  --senju-blue: #2563eb;
+  --senju-blue: #1e40af;
   --arakawa-navy: #1e3a8a;
   --bridge-orange: #ea580c;
   --rainbow-purple: #7c3aed;
   --nature-green: #059669;
+  --focus-color: #fbbf24;
+  --high-contrast-white: #ffffff;
+  --readable-text: #f8fafc;
 }
 
 /* Tailwindで実現できないアニメーション */
@@ -50,19 +53,62 @@
   border: 0;
 }
 
-/* スキップリンク */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 6px;
-  background: var(--senju-blue);
-  color: white;
-  padding: 8px;
-  text-decoration: none;
-  z-index: 100;
+
+/* アクセシビリティ向上のためのフォーカススタイル */
+.focus-visible {
+  outline: 3px solid #fbbf24;
+  outline-offset: 3px;
+}
+
+/* 高コントラストフォーカスリング */
+*:focus-visible {
+  outline: 3px solid #fbbf24 !important;
+  outline-offset: 2px !important;
   border-radius: 4px;
 }
 
-.skip-link:focus {
-  top: 6px;
+/* ボタンとリンクの改善されたフォーカス */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #fbbf24 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* 色彩コントラスト改善 */
+.text-blue-100 {
+  color: #e0f2fe !important;
+}
+
+.text-blue-200 {
+  color: #b3e5fc !important;
+}
+
+.text-blue-300 {
+  color: #81d4fa !important;
+}
+
+/* より強い影とコントラスト */
+.enhanced-shadow {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* アニメーション削減の設定（ユーザー設定に応じて） */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .arakawa-flow::before {
+    animation: none;
+  }
+  
+  .rainbow-loading {
+    animation: none;
+  }
 }
