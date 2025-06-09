@@ -1,0 +1,55 @@
+{
+  "results_returned": 2,
+  "results_available": 10,
+  "results_start": 1,
+  "events": [
+    {
+      "event_id": 123456,
+      "title": "Senju.dev Tech Meetup #1",
+      "catch": "技術コミュニティの集い",
+      "description": "地域の技術者が集まる勉強会です",
+      "event_url": "https://senjudev.connpass.com/event/123456/",
+      "started_at": "2025-07-15T19:00:00+09:00",
+      "ended_at": "2025-07-15T21:00:00+09:00",
+      "limit": 30,
+      "accepted": 15,
+      "waiting": 0,
+      "updated_at": "2025-06-01T10:00:00+09:00",
+      "owner_id": 12345,
+      "owner_nickname": "senjudev",
+      "owner_display_name": "Senju.dev",
+      "place": "千住地域学習センター",
+      "address": "東京都足立区千住5-13-5",
+      "lat": "35.7487",
+      "lon": "139.8056",
+      "series": {
+        "id": 11169,
+        "title": "Senju.dev",
+        "url": "https://senjudev.connpass.com/"
+      }
+    },
+    {
+      "event_id": 654321,
+      "title": "Senju.dev Previous Event",
+      "catch": "過去のイベント",
+      "description": "過去に開催されたイベントです",
+      "event_url": "https://senjudev.connpass.com/event/654321/",
+      "started_at": "2025-05-15T19:00:00+09:00",
+      "ended_at": "2025-05-15T21:00:00+09:00",
+      "limit": 25,
+      "accepted": 20,
+      "waiting": 2,
+      "updated_at": "2025-05-01T10:00:00+09:00",
+      "owner_id": 12345,
+      "owner_nickname": "senjudev",
+      "owner_display_name": "Senju.dev",
+      "place": "千住地域学習センター",
+      "address": "東京都足立区千住5-13-5",
+      "series": {
+        "id": 11169,
+        "title": "Senju.dev",
+        "url": "https://senjudev.connpass.com/"
+      }
+    }
+  ]
+}
