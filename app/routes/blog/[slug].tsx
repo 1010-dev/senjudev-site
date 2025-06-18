@@ -1,7 +1,9 @@
 import { css } from "hono/css";
 import { createRoute } from "honox/factory";
-import { getPostBySlug } from "@/data/posts";
 import { Navigation } from "@/components/Navigation";
+import fs from "fs/promises";
+import path from "path";
+import postsIndex from "../../../posts/index.json";
 
 const articleStyle = css`
   .article-container {
@@ -160,9 +162,22 @@ const articleStyle = css`
 
 export default createRoute(async (c) => {
   const slug = c.req.param("slug");
-  const post = await getPostBySlug(slug);
-
+  
+  // インデックスから記事情報を取得
+  const post = postsIndex.find(p => p.slug === slug);
+  
   if (!post) {
+    return c.notFound();
+  }
+
+  // HTMLファイルを読み込む
+  const htmlPath = path.join(process.cwd(), 'posts', 'html', post.htmlFile);
+  let htmlContent = '';
+  
+  try {
+    htmlContent = await fs.readFile(htmlPath, 'utf-8');
+  } catch (error) {
+    console.error('Failed to read HTML file:', error);
     return c.notFound();
   }
 
@@ -171,35 +186,35 @@ export default createRoute(async (c) => {
       <Navigation />
       <div class={articleStyle}>
         <div class="article-container">
-        <a href="/blog" class="back-link">
-          ← ブログ一覧に戻る
-        </a>
+          <a href="/blog" class="back-link">
+            ← ブログ一覧に戻る
+          </a>
 
-        <article>
-          <header class="article-header">
-            <h1 class="article-title">{post.title}</h1>
-            <div class="article-meta">
-              <time>{new Date(post.date).toLocaleDateString("ja-JP")}</time>
-              {post.author && <span>by {post.author}</span>}
-            </div>
-            {post.tags && post.tags.length > 0 && (
-              <div class="article-tags">
-                {post.tags.map((tag) => (
-                  <span key={tag} class="article-tag">
-                    {tag}
-                  </span>
-                ))}
+          <article>
+            <header class="article-header">
+              <h1 class="article-title">{post.title}</h1>
+              <div class="article-meta">
+                <time>{new Date(post.date).toLocaleDateString("ja-JP")}</time>
+                {post.author && <span>by {post.author}</span>}
               </div>
-            )}
-          </header>
+              {post.tags && post.tags.length > 0 && (
+                <div class="article-tags">
+                  {post.tags.map((tag) => (
+                    <span key={tag} class="article-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </header>
 
-          <div class="article-content">
-            <div 
-              class="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: post.htmlContent || '' }}
-            />
-          </div>
-        </article>
+            <div class="article-content">
+              <div 
+                class="prose prose-lg max-w-none"
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
+            </div>
+          </article>
         </div>
       </div>
     </div>

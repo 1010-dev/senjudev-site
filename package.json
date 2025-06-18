@@ -3,10 +3,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --mode client && vite build && npm run copy-public",
+    "build": "npm run build:blog && vite build --mode client && vite build && npm run copy-public && npm run copy-posts",
+    "build:blog": "node scripts/build-blog.js",
     "preview": "wrangler pages dev dist",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "copy-public": "cp -r public/* dist/static/"
+    "copy-public": "cp -r public/* dist/static/",
+    "copy-posts": "cp -r posts dist/"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +24,7 @@
     "@tailwindcss/postcss": "^4.1.7",
     "@tailwindcss/vite": "^4.1.7",
     "autoprefixer": "^10.4.21",
+    "gray-matter": "^4.0.3",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.7",
     "vite": "^6.1.1",
