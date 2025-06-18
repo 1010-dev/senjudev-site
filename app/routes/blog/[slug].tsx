@@ -1,6 +1,6 @@
 import { css } from "hono/css";
 import { createRoute } from "honox/factory";
-import { getPostBySlug } from "@/utils/mdx";
+import { getPostBySlug } from "@/data/posts";
 
 const articleStyle = css`
   .article-container {

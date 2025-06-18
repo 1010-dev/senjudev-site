@@ -1,5 +1,5 @@
 import { css } from "hono/css";
-import { getAllPosts } from "@/utils/mdx";
+import { getAllPosts } from "@/data/posts";
 
 const blogPageStyle = css`
   .blog-container {
