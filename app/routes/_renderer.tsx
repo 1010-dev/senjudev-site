@@ -32,7 +32,7 @@ export default jsxRenderer(({ children }) => {
 
         {/* その他のメタタグ */}
         <meta name="theme-color" content="#374151" />
-        <meta name="robots" content="noindex, nofollow" />
+        <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://senju.dev" />
 
         {/* ファビコン */}
