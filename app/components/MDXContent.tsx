@@ -1,5 +1,6 @@
 import { compile } from "@mdx-js/mdx";
-import { jsx, jsxs, Fragment } from "hono/jsx";
+import rehypeHighlight from "rehype-highlight";
+import rehypeStringify from "rehype-stringify";
 
 interface MDXContentProps {
   content: string;
@@ -7,16 +8,15 @@ interface MDXContentProps {
 
 export async function MDXContent({ content }: MDXContentProps) {
   const compiled = await compile(content, {
-    outputFormat: "function-body",
-    development: false,
+    rehypePlugins: [rehypeHighlight, rehypeStringify],
   });
 
-  const code = String(compiled);
-  const Component = new Function("_jsx", "_jsxs", "_Fragment", code);
+  const html = String(compiled);
 
   return (
-    <div class="prose prose-lg max-w-none">
-      {Component(jsx, jsxs, Fragment)}
-    </div>
+    <div 
+      class="prose prose-lg max-w-none"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }
