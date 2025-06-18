@@ -95,6 +95,12 @@ export default createRoute((c) => {
             <p class="text-gray-600 mb-4">千住.dev コミュニティ</p>
             <nav aria-label="外部リンク" class="flex justify-center space-x-6 text-sm">
               <a
+                href="/blog"
+                class="text-gray-600 hover:text-gray-800 transition-colors hover:underline"
+              >
+                Blog
+              </a>
+              <a
                 href="https://discord.gg/gMgdDhbjVg"
                 class="text-gray-600 hover:text-gray-800 transition-colors flex items-center gap-2 hover:underline"
               >
