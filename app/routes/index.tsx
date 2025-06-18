@@ -1,10 +1,14 @@
 import { createRoute } from "honox/factory";
 import Events from "../islands/events";
 import { DiscordIcon, ConnpassIcon } from "../components/icons";
+import { Navigation } from "../components/Navigation";
 
 export default createRoute((c) => {
   return c.render(
     <div class="bg-gray-50 text-gray-900 min-h-screen">
+
+      {/* ナビゲーション */}
+      <Navigation />
 
       <div class="max-w-6xl mx-auto px-6 py-8 relative z-10">
         {/* ヘッダー */}

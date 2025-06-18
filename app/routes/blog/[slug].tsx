@@ -1,6 +1,7 @@
 import { css } from "hono/css";
 import { createRoute } from "honox/factory";
 import { getPostBySlug } from "@/data/posts";
+import { Navigation } from "@/components/Navigation";
 
 const articleStyle = css`
   .article-container {
@@ -166,8 +167,10 @@ export default createRoute(async (c) => {
   }
 
   return c.render(
-    <div class={articleStyle}>
-      <div class="article-container">
+    <div class="bg-gray-50 min-h-screen">
+      <Navigation />
+      <div class={articleStyle}>
+        <div class="article-container">
         <a href="/blog" class="back-link">
           ← ブログ一覧に戻る
         </a>
@@ -197,6 +200,7 @@ export default createRoute(async (c) => {
             />
           </div>
         </article>
+        </div>
       </div>
     </div>
   );

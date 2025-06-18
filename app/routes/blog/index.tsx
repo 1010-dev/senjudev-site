@@ -1,5 +1,6 @@
 import { css } from "hono/css";
 import { getAllPosts } from "@/data/posts";
+import { Navigation } from "@/components/Navigation";
 
 const blogPageStyle = css`
   .blog-container {
@@ -99,8 +100,10 @@ export default async function BlogIndex() {
   const posts = await getAllPosts();
 
   return (
-    <div class={blogPageStyle}>
-      <div class="blog-container">
+    <div class="bg-gray-50 min-h-screen">
+      <Navigation />
+      <div class={blogPageStyle}>
+        <div class="blog-container">
         <header class="blog-header">
           <h1 class="blog-title">senju.dev Blog</h1>
           <p class="text-gray-600">千住エリアの技術者による技術記事</p>
@@ -138,6 +141,7 @@ export default async function BlogIndex() {
             <p>まだ記事がありません。</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
