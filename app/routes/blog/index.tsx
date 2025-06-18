@@ -1,6 +1,6 @@
 import { css } from "hono/css";
 import { Navigation } from "@/components/Navigation";
-import postsIndex from "../../../posts/index.json";
+import { FC } from "hono/jsx";
 
 const blogPageStyle = css`
   .blog-container {
@@ -93,9 +93,68 @@ const blogPageStyle = css`
   }
 `;
 
-export default async function BlogIndex() {
-  const posts = postsIndex || [];
+const Posts: FC = () => {
+  const posts = import.meta.glob<{
+    frontmatter: {
+      title: string;
+      date: string;
+      excerpt?: string;
+      tags?: string[];
+      author?: string;
+      published?: boolean;
+    };
+  }>("/app/routes/posts/*.mdx", { eager: true });
+  
+  const entries = Object.entries(posts).filter(
+    ([_, module]) => module.frontmatter.published !== false
+  );
+  
+  const sortedEntries = entries
+    .sort((a, b) => {
+      const dateA = new Date(a[1].frontmatter.date).getTime();
+      const dateB = new Date(b[1].frontmatter.date).getTime();
+      return dateB - dateA;
+    });
 
+  return (
+    <div class="blog-grid">
+      {sortedEntries.map(([id, module]) => {
+        const slug = id.replace("/app/routes/posts/", "").replace(/\.mdx$/, "");
+        return (
+          <article key={slug} class="blog-card">
+            <h2 class="blog-card-title">
+              <a href={`/posts/${slug}`} class="blog-link">
+                {module.frontmatter.title}
+              </a>
+            </h2>
+            <time class="blog-card-date">
+              {new Date(module.frontmatter.date).toLocaleDateString("ja-JP")}
+            </time>
+            {module.frontmatter.excerpt && (
+              <p class="blog-card-excerpt">{module.frontmatter.excerpt}</p>
+            )}
+            {module.frontmatter.tags && module.frontmatter.tags.length > 0 && (
+              <div class="blog-card-tags">
+                {module.frontmatter.tags.map((tag) => (
+                  <span key={tag} class="blog-card-tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </article>
+        );
+      })}
+      {sortedEntries.length === 0 && (
+        <div class="text-center text-gray-500 mt-8">
+          <p>まだ記事がありません。</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function BlogIndex() {
   return (
     <div class="bg-gray-50 min-h-screen">
       <Navigation />
@@ -105,39 +164,7 @@ export default async function BlogIndex() {
             <h1 class="blog-title">senju.dev Blog</h1>
             <p class="text-gray-600">千住エリアの技術者による技術記事</p>
           </header>
-
-          <div class="blog-grid">
-            {posts.map((post) => (
-              <article key={post.slug} class="blog-card">
-                <h2 class="blog-card-title">
-                  <a href={`/blog/${post.slug}`} class="blog-link">
-                    {post.title}
-                  </a>
-                </h2>
-                <time class="blog-card-date">
-                  {new Date(post.date).toLocaleDateString("ja-JP")}
-                </time>
-                {post.excerpt && (
-                  <p class="blog-card-excerpt">{post.excerpt}</p>
-                )}
-                {post.tags && post.tags.length > 0 && (
-                  <div class="blog-card-tags">
-                    {post.tags.map((tag) => (
-                      <span key={tag} class="blog-card-tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-
-          {posts.length === 0 && (
-            <div class="text-center text-gray-500 mt-8">
-              <p>まだ記事がありません。</p>
-            </div>
-          )}
+          <Posts />
         </div>
       </div>
     </div>
