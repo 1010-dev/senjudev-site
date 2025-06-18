@@ -1,7 +1,6 @@
 import { css } from "hono/css";
 import { createRoute } from "honox/factory";
 import { getPostBySlug } from "@/utils/mdx";
-import { MDXContent } from "@/components/MDXContent";
 
 const articleStyle = css`
   .article-container {
@@ -192,7 +191,10 @@ export default createRoute(async (c) => {
           </header>
 
           <div class="article-content">
-            <MDXContent content={post.content} />
+            <div 
+              class="prose prose-lg max-w-none"
+              dangerouslySetInnerHTML={{ __html: post.htmlContent || '' }}
+            />
           </div>
         </article>
       </div>

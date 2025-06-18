@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { glob } from "glob";
+import { marked } from "marked";
 
 export interface BlogPost {
   slug: string;
@@ -11,11 +12,12 @@ export interface BlogPost {
   tags?: string[];
   author?: string;
   content: string;
+  htmlContent?: string;
 }
 
 export async function getAllPosts(): Promise<BlogPost[]> {
   const postsDirectory = path.join(process.cwd(), "posts");
-  const mdxFiles = await glob("**/*.mdx", { cwd: postsDirectory });
+  const mdxFiles = await glob("**/*.md", { cwd: postsDirectory });
 
   const posts = await Promise.all(
     mdxFiles.map(async (filename) => {
@@ -23,7 +25,10 @@ export async function getAllPosts(): Promise<BlogPost[]> {
       const fileContents = fs.readFileSync(filePath, "utf8");
       const { data, content } = matter(fileContents);
 
-      const slug = filename.replace(/\.mdx$/, "");
+      const slug = filename.replace(/\.md$/, "");
+
+      // Convert Markdown to HTML
+      const htmlContent = await marked(content);
 
       return {
         slug,
@@ -33,6 +38,7 @@ export async function getAllPosts(): Promise<BlogPost[]> {
         tags: data.tags || [],
         author: data.author,
         content,
+        htmlContent,
       };
     })
   );
