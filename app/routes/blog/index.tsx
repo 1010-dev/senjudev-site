@@ -4,7 +4,7 @@ import { FC } from "hono/jsx";
 
 const blogPageStyle = css`
   .blog-container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 2rem 1rem;
   }
@@ -21,65 +21,94 @@ const blogPageStyle = css`
     margin-bottom: 0.5rem;
   }
 
-  .blog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
+  .blog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
     margin-top: 2rem;
   }
 
-  .blog-card {
-    background: white;
-    border-radius: 0.75rem;
-    padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+  .blog-item {
+    border-bottom: 1px solid #e5e7eb;
   }
 
-  .blog-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  .blog-item:last-child {
+    border-bottom: none;
   }
 
-  .blog-card-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-  }
-
-  .blog-link {
-    color: #1f2937;
+  .blog-item-link {
+    display: block;
+    padding: 1.5rem 0;
+    color: inherit;
     text-decoration: none;
+    transition: background-color 0.2s;
   }
 
-  .blog-link:hover {
+  .blog-item:first-child .blog-item-link {
+    padding-top: 0;
+  }
+
+  .blog-item-link:hover {
+    background-color: #f9fafb;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .blog-item-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-item-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    flex-grow: 1;
+  }
+
+  .blog-item-link:hover .blog-item-title {
     color: #3b82f6;
   }
 
-  .blog-card-date {
+  .blog-item-date {
     color: #6b7280;
     font-size: 0.875rem;
-    margin-bottom: 1rem;
+    flex-shrink: 0;
   }
 
-  .blog-card-excerpt {
+  .blog-item-excerpt {
     color: #4b5563;
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
   }
 
-  .blog-card-tags {
+  .blog-item-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .blog-item-tags {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
   }
 
-  .blog-card-tag {
-    background: #e5e7eb;
-    color: #4b5563;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
+  .blog-item-tag {
+    background: #f3f4f6;
+    color: #6b7280;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
     font-size: 0.75rem;
+  }
+
+  .blog-item-author {
+    color: #6b7280;
+    font-size: 0.875rem;
   }
 
   @media (max-width: 768px) {
@@ -87,8 +116,13 @@ const blogPageStyle = css`
       font-size: 2rem;
     }
     
-    .blog-grid {
-      grid-template-columns: 1fr;
+    .blog-item-header {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .blog-item-date {
+      font-size: 0.75rem;
     }
   }
 `;
@@ -117,31 +151,38 @@ const Posts: FC = () => {
     });
 
   return (
-    <div class="blog-grid">
+    <div class="blog-list">
       {sortedEntries.map(([id, module]) => {
         const slug = id.replace("/app/routes/posts/", "").replace(/\.mdx$/, "");
         return (
-          <article key={slug} class="blog-card">
-            <h2 class="blog-card-title">
-              <a href={`/posts/${slug}`} class="blog-link">
-                {module.frontmatter.title}
-              </a>
-            </h2>
-            <time class="blog-card-date">
-              {new Date(module.frontmatter.date).toLocaleDateString("ja-JP")}
-            </time>
-            {module.frontmatter.excerpt && (
-              <p class="blog-card-excerpt">{module.frontmatter.excerpt}</p>
-            )}
-            {module.frontmatter.tags && module.frontmatter.tags.length > 0 && (
-              <div class="blog-card-tags">
-                {module.frontmatter.tags.map((tag) => (
-                  <span key={tag} class="blog-card-tag">
-                    {tag}
-                  </span>
-                ))}
+          <article key={slug} class="blog-item">
+            <a href={`/posts/${slug}`} class="blog-item-link">
+              <div class="blog-item-header">
+                <h2 class="blog-item-title">
+                  {module.frontmatter.title}
+                </h2>
+                <time class="blog-item-date">
+                  {new Date(module.frontmatter.date).toLocaleDateString("ja-JP")}
+                </time>
               </div>
-            )}
+              {module.frontmatter.excerpt && (
+                <p class="blog-item-excerpt">{module.frontmatter.excerpt}</p>
+              )}
+              <div class="blog-item-footer">
+                {module.frontmatter.tags && module.frontmatter.tags.length > 0 && (
+                  <div class="blog-item-tags">
+                    {module.frontmatter.tags.map((tag) => (
+                      <span key={tag} class="blog-item-tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {module.frontmatter.author && (
+                  <span class="blog-item-author">by {module.frontmatter.author}</span>
+                )}
+              </div>
+            </a>
           </article>
         );
       })}
