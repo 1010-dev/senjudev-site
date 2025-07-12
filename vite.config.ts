@@ -5,6 +5,9 @@ import tailwindcss from "@tailwindcss/vite";
 import honox from "honox/vite";
 import client from "honox/vite/client";
 import { defineConfig } from "vite";
+import mdx from "@mdx-js/rollup";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
 const baseConfig = {
   resolve: {
@@ -13,6 +16,10 @@ const baseConfig = {
     },
   },
   plugins: [
+    mdx({
+      jsxImportSource: "hono/jsx",
+      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+    }),
     honox({
       client: {
         input: ["/app/style.css"],
@@ -28,6 +35,10 @@ export default defineConfig(({ mode }) => {
     return {
       ...baseConfig,
       plugins: [
+        mdx({
+          jsxImportSource: "hono/jsx",
+          remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+        }),
         honox({
           client: {
             input: ["/app/style.css"],
@@ -42,6 +53,10 @@ export default defineConfig(({ mode }) => {
     return {
       ...baseConfig,
       plugins: [
+        mdx({
+          jsxImportSource: "hono/jsx",
+          remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+        }),
         honox({
           devServer: { adapter },
         }),

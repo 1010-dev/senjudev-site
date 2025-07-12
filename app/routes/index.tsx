@@ -1,10 +1,14 @@
 import { createRoute } from "honox/factory";
 import Events from "../islands/events";
 import { DiscordIcon, ConnpassIcon } from "../components/icons";
+import { Navigation } from "../components/Navigation";
 
 export default createRoute((c) => {
   return c.render(
     <div class="bg-gray-50 text-gray-900 min-h-screen">
+
+      {/* ナビゲーション */}
+      <Navigation />
 
       <div class="max-w-6xl mx-auto px-6 py-8 relative z-10">
         {/* ヘッダー */}
@@ -94,6 +98,12 @@ export default createRoute((c) => {
             <div class="w-24 h-1 bg-gray-400 mx-auto mb-6 rounded-full"></div>
             <p class="text-gray-600 mb-4">千住.dev コミュニティ</p>
             <nav aria-label="外部リンク" class="flex justify-center space-x-6 text-sm">
+              <a
+                href="/blog"
+                class="text-gray-600 hover:text-gray-800 transition-colors hover:underline"
+              >
+                Blog
+              </a>
               <a
                 href="https://discord.gg/gMgdDhbjVg"
                 class="text-gray-600 hover:text-gray-800 transition-colors flex items-center gap-2 hover:underline"
