@@ -1,0 +1,202 @@
+---
+title: サンプル記事_シンタックスハイライトの動作確認
+date: 2025-07-23
+excerpt: rehype-pretty-code を使って、ブログ記事内で表示するコードブロックにシンタックスハイライトを適用しました。この記事は、シンタックスハイライトの表示スタイルを確認するためのサンプルです。
+tags:
+  - テスト
+  - コード
+  - ハイライト
+author: senju.dev Team
+---
+
+# シンタックスハイライトのテスト
+
+このページでは、MDX ファイルでのシンタックスハイライトが正しく動作するかテストします。
+
+## JavaScript の例
+
+```javascript
+// Hello World の例
+function greetSenjuDev() {
+  const message = "Hello, senju.dev!";
+  console.log(message);
+
+  // 配列の操作
+  const members = ["Alice", "Bob", "Charlie"];
+  members.forEach((member) => {
+    console.log(`Welcome ${member}!`);
+  });
+
+  return message;
+}
+
+greetSenjuDev();
+```
+
+## TypeScript の例
+
+```typescript
+interface Community {
+  name: string;
+  location: string;
+  members: Member[];
+  establishedYear: number;
+}
+
+interface Member {
+  id: string;
+  name: string;
+  skills: string[];
+}
+
+const senjuDev: Community = {
+  name: "senju.dev",
+  location: "北千住",
+  members: [],
+  establishedYear: 2024,
+};
+
+function addMember(community: Community, member: Member): void {
+  community.members.push(member);
+  console.log(`${member.name} さんがコミュニティに参加しました！`);
+}
+```
+
+## React/JSX の例
+
+```jsx
+import { useState } from "react";
+
+const EventCard = ({ event }) => {
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  const handleRegister = () => {
+    setIsRegistered(true);
+    console.log(`${event.title} に参加登録しました`);
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h3 className="text-xl font-bold text-gray-800">{event.title}</h3>
+      <p className="text-gray-600 mt-2">開催日: {event.date}</p>
+      <button
+        onClick={handleRegister}
+        disabled={isRegistered}
+        className={`mt-4 px-4 py-2 rounded ${
+          isRegistered
+            ? "bg-gray-300 text-gray-500"
+            : "bg-blue-500 text-white hover:bg-blue-600"
+        }`}
+      >
+        {isRegistered ? "参加済み" : "参加登録"}
+      </button>
+    </div>
+  );
+};
+
+export default EventCard;
+```
+
+## Python の例
+
+```python
+class SenjuDevCommunity:
+    def __init__(self, name="senju.dev"):
+        self.name = name
+        self.members = []
+        self.events = []
+
+    def add_member(self, member_name, skills=[]):
+        """新しいメンバーをコミュニティに追加"""
+        member = {
+            "name": member_name,
+            "skills": skills,
+            "joined_date": datetime.now()
+        }
+        self.members.append(member)
+        print(f"{member_name}さんがコミュニティに参加しました！")
+
+    def organize_event(self, title, date):
+        """イベントを企画"""
+        event = {
+            "title": title,
+            "date": date,
+            "participants": []
+        }
+        self.events.append(event)
+        return event
+
+# コミュニティのインスタンス作成
+community = SenjuDevCommunity()
+community.add_member("太郎", ["Python", "JavaScript"])
+community.organize_event("北千住LT大会", "2025-08-15")
+```
+
+## CSS の例
+
+```css
+/* senju.dev のテーマカラー */
+:root {
+  --senju-blue: #1e40af;
+  --arakawa-navy: #1e3a8a;
+  --bridge-orange: #ea580c;
+}
+
+.event-card {
+  background: linear-gradient(135deg, var(--senju-blue), var(--arakawa-navy));
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3);
+}
+
+@media (max-width: 768px) {
+  .event-card {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}
+```
+
+## SQL の例
+
+```sql
+-- senju.dev イベント管理システム
+CREATE TABLE events (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    event_date TIMESTAMP NOT NULL,
+    location VARCHAR(255),
+    max_participants INTEGER DEFAULT 50,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE participants (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER REFERENCES events(id),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    skills TEXT[],
+    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 今月のイベント一覧を取得
+SELECT
+    e.title,
+    e.event_date,
+    e.location,
+    COUNT(p.id) as participant_count,
+    e.max_participants
+FROM events e
+LEFT JOIN participants p ON e.id = p.event_id
+WHERE DATE_TRUNC('month', e.event_date) = DATE_TRUNC('month', CURRENT_DATE)
+GROUP BY e.id, e.title, e.event_date, e.location, e.max_participants
+ORDER BY e.event_date ASC;
+```

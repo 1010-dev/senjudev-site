@@ -14,8 +14,12 @@
     "hono": "^4.7.10",
     "honox": "^0.1.40",
     "marked": "^15.0.12",
+    "rehype-pretty-code": "^0.14.1",
+    "rehype-slug": "^6.0.0",
     "remark-frontmatter": "^5.0.0",
-    "remark-mdx-frontmatter": "^5.2.0"
+    "remark-gfm": "^4.0.1",
+    "remark-mdx-frontmatter": "^5.2.0",
+    "shiki": "^3.8.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250214.0",
