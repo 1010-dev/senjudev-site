@@ -1,4 +1,4 @@
-@import 'tailwindcss' source('../app');
+@import "tailwindcss" source("../app");
 
 /* アクセシビリティを考慮したカスタムCSS */
 :root {
@@ -29,7 +29,6 @@
   white-space: nowrap;
   border: 0;
 }
-
 
 /* アクセシビリティ向上のためのフォーカススタイル */
 .focus-visible {
@@ -226,4 +225,86 @@ button:focus-visible {
   margin-top: 1.667em;
   margin-bottom: 0.667em;
   line-height: 1.5;
+}
+
+/* Syntax Highlighting Styles for Code Blocks */
+pre {
+  @apply relative rounded-lg border border-gray-700 bg-gray-900 p-4 text-sm overflow-x-auto;
+}
+
+pre code {
+  @apply text-gray-100;
+  background: transparent !important;
+}
+
+code {
+  @apply rounded bg-gray-100 px-1.5 py-0.5 text-sm text-gray-800;
+}
+
+pre code {
+  @apply bg-transparent p-0 text-gray-100;
+}
+
+/* Line highlighting */
+[data-line] {
+  @apply px-4 py-0.5;
+}
+
+[data-highlighted-line] {
+  @apply bg-gray-800;
+}
+
+/* Line numbers */
+[data-line-numbers] {
+  counter-reset: line;
+}
+
+[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  @apply mr-4 inline-block w-4 text-right text-gray-500;
+}
+
+/* Highlighted characters */
+[data-highlighted-chars] {
+  @apply bg-blue-500/20 rounded px-1;
+}
+
+/* Title styling */
+[data-rehype-pretty-code-title] {
+  @apply rounded-t-lg bg-gray-800 px-4 py-2 text-sm text-gray-200 font-mono;
+}
+
+[data-rehype-pretty-code-title] + pre {
+  @apply rounded-t-none;
+}
+
+/* Copy button */
+[data-rehype-pretty-code-fragment] {
+  @apply relative;
+}
+
+/* Specific token styling */
+.token.comment {
+  @apply text-gray-500;
+}
+
+.token.string {
+  @apply text-green-400;
+}
+
+.token.number {
+  @apply text-blue-400;
+}
+
+.token.keyword {
+  @apply text-purple-400;
+}
+
+.token.function {
+  @apply text-yellow-400;
+}
+
+.token.operator {
+  @apply text-pink-400;
 }
