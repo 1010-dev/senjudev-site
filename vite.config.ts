@@ -8,6 +8,9 @@ import { defineConfig } from "vite";
 import mdx from "@mdx-js/rollup";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
+import remarkGfm from "remark-gfm";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
 
 const baseConfig = {
   resolve: {
@@ -18,7 +21,17 @@ const baseConfig = {
   plugins: [
     mdx({
       jsxImportSource: "hono/jsx",
-      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm],
+      rehypePlugins: [
+        rehypeSlug,
+        [
+          rehypePrettyCode,
+          {
+            theme: "github-dark",
+            keepBackground: false,
+          },
+        ],
+      ],
     }),
     honox({
       client: {
@@ -37,7 +50,17 @@ export default defineConfig(({ mode }) => {
       plugins: [
         mdx({
           jsxImportSource: "hono/jsx",
-          remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+          remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm],
+          rehypePlugins: [
+            rehypeSlug,
+            [
+              rehypePrettyCode,
+              {
+                theme: "github-dark",
+                keepBackground: false,
+              },
+            ],
+          ],
         }),
         honox({
           client: {
@@ -55,7 +78,17 @@ export default defineConfig(({ mode }) => {
       plugins: [
         mdx({
           jsxImportSource: "hono/jsx",
-          remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+          remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter, remarkGfm],
+          rehypePlugins: [
+            rehypeSlug,
+            [
+              rehypePrettyCode,
+              {
+                theme: "github-dark",
+                keepBackground: false,
+              },
+            ],
+          ],
         }),
         honox({
           devServer: { adapter },
