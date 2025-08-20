@@ -98,6 +98,9 @@ export default defineConfig(({ mode }) => {
       build: {
         ssrEmitAssets: true,
       },
+      ssr: {
+        external: ["leaflet"],
+      },
     };
   }
 });
