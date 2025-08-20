@@ -16,16 +16,15 @@ export default createRoute((c) => {
           {/* ロゴ */}
           <div class="mb-6 inline-block">
             <img
-              src="/logo-simple.png"
-              alt="Senju.dev - 千住大橋をモチーフとしたロゴ"
-              class="w-64 h-auto mx-auto"
+              src="/1010-tech-community.svg"
+              alt="Senju.dev"
+              class="w-96 h-auto mx-auto"
             />
           </div>
 
           {/* サイトタイトル */}
           <h1 class="text-6xl font-bold text-gray-800 mb-2 relative">
             <span class="sr-only">千住ドット開発</span>
-            <span aria-hidden="true">senju.dev</span>
           </h1>
           <h2 class="text-2xl text-gray-600 mb-4">
             <span class="sr-only">千住エリア技術コミュニティのウェブサイトです。</span>
