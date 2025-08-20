@@ -13,6 +13,7 @@ export default function Map() {
   const [markers, setMarkers] = useState<MarkerData[]>([]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (!mapContainerRef.current || mapRef.current) return;
 
     const loadMap = async () => {
@@ -39,14 +40,16 @@ export default function Map() {
         zoomOffset: 0,
       }).addTo(map);
 
-      const savedMarkers = localStorage.getItem("adachi-map-markers");
-      if (savedMarkers) {
-        const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
-        setMarkers(parsedMarkers);
-        
-        parsedMarkers.forEach((markerData) => {
-          addMarkerToMap(L, map, markerData);
-        });
+      if (typeof window !== "undefined" && window.localStorage) {
+        const savedMarkers = localStorage.getItem("adachi-map-markers");
+        if (savedMarkers) {
+          const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
+          setMarkers(parsedMarkers);
+          
+          parsedMarkers.forEach((markerData) => {
+            addMarkerToMap(L, map, markerData);
+          });
+        }
       }
 
       map.on("click", (e: any) => {
@@ -61,7 +64,9 @@ export default function Map() {
           
           const updatedMarkers = [...markers, newMarker];
           setMarkers(updatedMarkers);
-          localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
+          if (typeof window !== "undefined" && window.localStorage) {
+            localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
+          }
           
           addMarkerToMap(L, map, newMarker);
         }
@@ -90,10 +95,12 @@ export default function Map() {
       marker.on("click", () => {
         if (confirm(`「${markerData.comment}」を削除しますか？`)) {
           map.removeLayer(marker);
-          const currentMarkers = JSON.parse(localStorage.getItem("adachi-map-markers") || "[]");
-          const updatedMarkers = currentMarkers.filter((m: MarkerData) => m.id !== markerData.id);
-          localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
-          setMarkers(updatedMarkers);
+          if (typeof window !== "undefined" && window.localStorage) {
+            const currentMarkers = JSON.parse(localStorage.getItem("adachi-map-markers") || "[]");
+            const updatedMarkers = currentMarkers.filter((m: MarkerData) => m.id !== markerData.id);
+            localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
+            setMarkers(updatedMarkers);
+          }
         }
       });
     };
