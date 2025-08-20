@@ -1,23 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 1024 480" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
-    <g transform="matrix(1.09711,0,0,1.09711,-50.9578,-54.7371)">
-        <g>
-            <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
-                <path d="M280,130L280,390" style="fill:none;fill-rule:nonzero;stroke:rgb(50,88,86);stroke-width:42px;"/>
+<svg width="100%" height="100%" viewBox="0 0 1035 576" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
+    <g transform="matrix(1,0,0,1,0,-1402)">
+        <g id="Artboard1" transform="matrix(1.00983,0,0,0.562756,1.94697,1401.54)">
+            <rect x="-1.928" y="2.059" width="1024.22" height="1020.88" style="fill:none;"/>
+            <clipPath id="_clip1">
+                <rect x="-1.928" y="2.059" width="1024.22" height="1020.88"/>
+            </clipPath>
+            <g clip-path="url(#_clip1)">
+                <g transform="matrix(1.08643,0,0,1.94953,-40.4442,-538.416)">
+                    <g>
+                        <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
+                            <path d="M280,430L280,690" style="fill:none;fill-rule:nonzero;stroke:rgb(50,88,86);stroke-width:42px;"/>
+                        </g>
+                        <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
+                            <circle cx="540" cy="560" r="130" style="fill:none;stroke:rgb(50,88,86);stroke-width:42px;"/>
+                        </g>
+                        <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
+                            <path d="M800,430L800,690" style="fill:none;fill-rule:nonzero;stroke:rgb(50,88,86);stroke-width:42px;"/>
+                        </g>
+                        <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
+                            <circle cx="1060" cy="560" r="130" style="fill:none;stroke:rgb(50,88,86);stroke-width:42px;"/>
+                        </g>
+                    </g>
+                    <g transform="matrix(1.11333,0,0,1.11333,509.714,718.569)">
+                        <text x="-370.976px" y="0px" style="font-family:'HelveticaNeue', 'Helvetica Neue';font-size:80px;fill:rgb(50,88,86);">T<tspan x="-323.712px -273.488px -214.384px -155.28px -131.696px -72.592px -10.448px 60.576px 131.6px 190.704px 249.808px 271.872px 319.136px " y="0px 0px 0px 0px 0px 0px 0px 0px 0px 0px 0px 0px 0px ">ECH COMMUNITY</tspan></text>
+                    </g>
+                </g>
+                <g transform="matrix(0.99027,0,0,1.77697,10.0179,-441.15)">
+                    <rect x="-6.395" y="3.101" width="222.168" height="264.964" style="fill:none;"/>
+                </g>
+                <g transform="matrix(0.996254,0,0,1.78046,3.89575,-444.724)">
+                    <rect x="5.256" y="2.438" width="1017.94" height="1021.81" style="fill:none;"/>
+                </g>
             </g>
-            <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
-                <circle cx="540" cy="260" r="130" style="fill:none;stroke:rgb(50,88,86);stroke-width:42px;"/>
-            </g>
-            <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
-                <path d="M800,130L800,390" style="fill:none;fill-rule:nonzero;stroke:rgb(50,88,86);stroke-width:42px;"/>
-            </g>
-            <g transform="matrix(0.867813,0,0,0.867813,-111.96,-8.37686)">
-                <circle cx="1060" cy="260" r="130" style="fill:none;stroke:rgb(50,88,86);stroke-width:42px;"/>
-            </g>
-        </g>
-        <g transform="matrix(1.11333,0,0,1.11333,509.714,458.569)">
-            <text x="-370.976px" y="0px" style="font-family:'HelveticaNeue', 'Helvetica Neue';font-size:80px;fill:rgb(50,88,86);">TECH COMMUNITY</text>
         </g>
     </g>
 </svg>
