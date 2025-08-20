@@ -34,7 +34,7 @@ export default function Map() {
         maxZoom: 18,
       });
 
-      L.tileLayer("https://tile.openfreemap.org/styles/liberty/{z}/{x}/{y}.png", {
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         tileSize: 256,
         zoomOffset: 0,
