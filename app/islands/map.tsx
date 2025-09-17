@@ -11,51 +11,13 @@ export default function Map() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
-  const [gistId, setGistId] = useState<string>("");
+  const FIXED_GIST_ID = "167f3e6e45cfc5d07df3f0dc85d65690";
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const createGist = async (markers: MarkerData[]) => {
-    try {
-      setIsLoading(true);
-      const response = await fetch("https://api.github.com/gists", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          description: "足立区マップのコメントデータ",
-          public: true,
-          files: {
-            "adachi-markers.json": {
-              content: JSON.stringify(markers, null, 2),
-            },
-          },
-        }),
-      });
-
-      if (response.ok) {
-        const gist = await response.json();
-        const newGistId = gist.id;
-        setGistId(newGistId);
-        if (typeof window !== "undefined" && window.localStorage) {
-          localStorage.setItem("adachi-map-gist-id", newGistId);
-        }
-        alert(`Gistを作成しました: ${gist.html_url}`);
-      } else {
-        alert("Gistの作成に失敗しました");
-      }
-    } catch (error) {
-      alert("エラーが発生しました");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const updateGist = async (markers: MarkerData[]) => {
-    if (!gistId) return;
     try {
       setIsLoading(true);
-      const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+      const response = await fetch(`https://api.github.com/gists/${FIXED_GIST_ID}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -81,10 +43,10 @@ export default function Map() {
     }
   };
 
-  const loadFromGist = async (inputGistId: string) => {
+  const loadFromGist = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`https://api.github.com/gists/${inputGistId}`);
+      const response = await fetch(`https://api.github.com/gists/${FIXED_GIST_ID}`);
       
       if (response.ok) {
         const gist = await response.json();
@@ -93,11 +55,9 @@ export default function Map() {
         if (fileContent) {
           const loadedMarkers: MarkerData[] = JSON.parse(fileContent);
           setMarkers(loadedMarkers);
-          setGistId(inputGistId);
           
           if (typeof window !== "undefined" && window.localStorage) {
             localStorage.setItem("adachi-map-markers", JSON.stringify(loadedMarkers));
-            localStorage.setItem("adachi-map-gist-id", inputGistId);
           }
           
           if (mapRef.current) {
@@ -113,15 +73,13 @@ export default function Map() {
             });
           }
           
-          alert("Gistからデータを読み込みました");
-        } else {
-          alert("Gistにマーカーデータが見つかりません");
+          return loadedMarkers;
         }
-      } else {
-        alert("Gistの読み込みに失敗しました");
       }
+      return null;
     } catch (error) {
-      alert("エラーが発生しました");
+      console.error("Gist読み込みエラー:", error);
+      return null;
     } finally {
       setIsLoading(false);
     }
@@ -155,21 +113,20 @@ export default function Map() {
         zoomOffset: 0,
       }).addTo(map);
 
-      if (typeof window !== "undefined" && window.localStorage) {
-        const savedGistId = localStorage.getItem("adachi-map-gist-id");
-        if (savedGistId) {
-          setGistId(savedGistId);
-        }
-        
-        const savedMarkers = localStorage.getItem("adachi-map-markers");
-        if (savedMarkers) {
-          const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
-          setMarkers(parsedMarkers);
-          
-          parsedMarkers.forEach((markerData) => {
-            addMarkerToMap(L, map, markerData);
-          });
-        }
+      if (typeof window !== "undefined") {
+        loadFromGist().then((gistMarkers) => {
+          if (!gistMarkers && window.localStorage) {
+            const savedMarkers = localStorage.getItem("adachi-map-markers");
+            if (savedMarkers) {
+              const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
+              setMarkers(parsedMarkers);
+              
+              parsedMarkers.forEach((markerData) => {
+                addMarkerToMap(L, map, markerData);
+              });
+            }
+          }
+        });
       }
 
       map.on("click", (e: any) => {
@@ -189,6 +146,7 @@ export default function Map() {
           }
           
           addMarkerToMap(L, map, newMarker);
+          updateGist(updatedMarkers);
         }
       });
 
@@ -220,6 +178,7 @@ export default function Map() {
             const updatedMarkers = currentMarkers.filter((m: MarkerData) => m.id !== markerData.id);
             localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
             setMarkers(updatedMarkers);
+            updateGist(updatedMarkers);
           }
         }
       });
@@ -348,62 +307,26 @@ export default function Map() {
         <div>
           <button 
             class="sync-button" 
-            onClick={() => createGist(markers)}
-            disabled={isLoading || markers.length === 0}
-          >
-            新しいGistを作成
-          </button>
-          
-          {gistId && (
-            <button 
-              class="sync-button" 
-              onClick={() => updateGist(markers)}
-              disabled={isLoading}
-            >
-              Gistを更新
-            </button>
-          )}
-        </div>
-        
-        <div>
-          <input 
-            class="gist-input"
-            type="text" 
-            placeholder="Gist IDを入力" 
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                const input = e.target as HTMLInputElement;
-                if (input.value.trim()) {
-                  loadFromGist(input.value.trim());
-                  input.value = '';
-                }
-              }
-            }}
-          />
-          <button 
-            class="sync-button" 
-            onClick={() => {
-              const input = document.querySelector('.gist-input') as HTMLInputElement;
-              if (input?.value.trim()) {
-                loadFromGist(input.value.trim());
-                input.value = '';
-              }
-            }}
+            onClick={() => updateGist(markers)}
             disabled={isLoading}
           >
-            Gistから読み込み
+            データを保存
+          </button>
+          
+          <button 
+            class="sync-button" 
+            onClick={() => loadFromGist()}
+            disabled={isLoading}
+          >
+            最新データを読み込み
           </button>
         </div>
         
-        {gistId && (
-          <div class="gist-info">
-            現在のGist ID: <strong>{gistId}</strong>
-            <br />
-            URL: <a href={`https://gist.github.com/${gistId}`} target="_blank" rel="noopener noreferrer">
-              https://gist.github.com/{gistId}
-            </a>
-          </div>
-        )}
+        <div class="gist-info">
+          共有Gist: <a href={`https://gist.github.com/${FIXED_GIST_ID}`} target="_blank" rel="noopener noreferrer">
+            https://gist.github.com/{FIXED_GIST_ID}
+          </a>
+        </div>
         
         <div class="gist-info">
           マーカー数: {markers.length}個
