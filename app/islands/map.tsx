@@ -14,75 +14,73 @@ export default function Map() {
   const FIXED_GIST_ID = "167f3e6e45cfc5d07df3f0dc85d65690";
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const updateGist = async (markers: MarkerData[]) => {
+  const shareData = async (markers: MarkerData[]) => {
     try {
       setIsLoading(true);
-
-      // Gistを更新するAPIエンドポイントを利用
-      const response = await fetch(`/api/update-gist`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          gistId: FIXED_GIST_ID,
-          markers: markers,
-        }),
-      });
-
-      if (response.ok) {
-        console.log("Gistを更新しました");
+      
+      // データをJSONとしてコピー用文字列を生成
+      const shareText = JSON.stringify(markers, null, 2);
+      
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareText);
+        alert("マーカーデータをクリップボードにコピーしました。他のユーザーと共有してください。");
       } else {
-        console.error("Gistの更新に失敗しました");
+        // フォールバック: テキストエリアに表示
+        const textarea = document.createElement('textarea');
+        textarea.value = shareText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert("マーカーデータをクリップボードにコピーしました。");
       }
     } catch (error) {
       console.error("エラーが発生しました:", error);
+      alert("データのコピーに失敗しました");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadFromGist = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`https://api.github.com/gists/${FIXED_GIST_ID}`);
-
-      if (response.ok) {
-        const gist = await response.json();
-        const fileContent = gist.files["adachi-markers.json"]?.content;
-
-        if (fileContent) {
-          const loadedMarkers: MarkerData[] = JSON.parse(fileContent);
-          setMarkers(loadedMarkers);
-
-          if (typeof window !== "undefined" && window.localStorage) {
-            localStorage.setItem("adachi-map-markers", JSON.stringify(loadedMarkers));
-          }
-
-          if (mapRef.current) {
-            mapRef.current.eachLayer((layer: any) => {
-              if (layer.options.icon?.options?.className === "custom-marker") {
-                mapRef.current.removeLayer(layer);
-              }
-            });
-
+  const importData = () => {
+    const input = prompt("共有されたマーカーデータを貼り付けてください:");
+    if (input && input.trim()) {
+      try {
+        const importedMarkers: MarkerData[] = JSON.parse(input.trim());
+        
+        // 既存のマーカーをクリア
+        if (mapRef.current) {
+          mapRef.current.eachLayer((layer: any) => {
+            if (layer.options.icon?.options?.className === "custom-marker") {
+              mapRef.current.removeLayer(layer);
+            }
+          });
+        }
+        
+        setMarkers(importedMarkers);
+        
+        if (typeof window !== "undefined" && window.localStorage) {
+          localStorage.setItem("adachi-map-markers", JSON.stringify(importedMarkers));
+        }
+        
+        // 新しいマーカーを地図に追加
+        if (mapRef.current) {
+          const loadMap = async () => {
             const L = await import("leaflet");
-            loadedMarkers.forEach((markerData) => {
+            importedMarkers.forEach((markerData) => {
               addMarkerToMap(L, mapRef.current, markerData);
             });
-          }
-
-          return loadedMarkers;
+          };
+          loadMap();
         }
+        
+        alert(`${importedMarkers.length}個のマーカーをインポートしました`);
+      } catch (error) {
+        alert("データの形式が正しくありません");
       }
-      return null;
-    } catch (error) {
-      console.error("Gist読み込みエラー:", error);
-      return null;
-    } finally {
-      setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -112,20 +110,16 @@ export default function Map() {
         zoomOffset: 0,
       }).addTo(map);
 
-      if (typeof window !== "undefined") {
-        loadFromGist().then((gistMarkers) => {
-          if (!gistMarkers && window.localStorage) {
-            const savedMarkers = localStorage.getItem("adachi-map-markers");
-            if (savedMarkers) {
-              const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
-              setMarkers(parsedMarkers);
+      if (typeof window !== "undefined" && window.localStorage) {
+        const savedMarkers = localStorage.getItem("adachi-map-markers");
+        if (savedMarkers) {
+          const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
+          setMarkers(parsedMarkers);
 
-              parsedMarkers.forEach((markerData) => {
-                addMarkerToMap(L, map, markerData);
-              });
-            }
-          }
-        });
+          parsedMarkers.forEach((markerData) => {
+            addMarkerToMap(L, map, markerData);
+          });
+        }
       }
 
       map.on("click", (e: any) => {
@@ -145,7 +139,6 @@ export default function Map() {
           }
 
           addMarkerToMap(L, map, newMarker);
-          updateGist(updatedMarkers);
         }
       });
 
@@ -177,7 +170,6 @@ export default function Map() {
             const updatedMarkers = currentMarkers.filter((m: MarkerData) => m.id !== markerData.id);
             localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
             setMarkers(updatedMarkers);
-            updateGist(updatedMarkers);
           }
         }
       });
@@ -306,30 +298,28 @@ export default function Map() {
         <div>
           <button
             class="sync-button"
-            onClick={() => updateGist(markers)}
-            disabled={isLoading}
+            onClick={() => shareData(markers)}
+            disabled={isLoading || markers.length === 0}
           >
-            データを保存
+            データをコピー
           </button>
 
           <button
             class="sync-button"
-            onClick={() => loadFromGist()}
+            onClick={() => importData()}
             disabled={isLoading}
           >
-            最新データを読み込み
+            データをインポート
           </button>
-        </div>
-
-        <div class="gist-info">
-          共有Gist: <a href={`https://gist.github.com/${FIXED_GIST_ID}`} target="_blank" rel="noopener noreferrer">
-            https://gist.github.com/{FIXED_GIST_ID}
-          </a>
         </div>
 
         <div class="gist-info">
           マーカー数: {markers.length}個
           {isLoading && " (処理中...)"}
+        </div>
+        
+        <div class="gist-info">
+          「データをコピー」でマーカーデータをクリップボードにコピーし、他のユーザーと共有できます。
         </div>
       </div>
 
