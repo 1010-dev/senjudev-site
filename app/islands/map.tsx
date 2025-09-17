@@ -17,7 +17,7 @@ export default function Map() {
   const updateGist = async (markers: MarkerData[]) => {
     try {
       setIsLoading(true);
-      
+
       // Gistを更新するAPIエンドポイントを利用
       const response = await fetch(`/api/update-gist`, {
         method: "POST",
@@ -46,32 +46,32 @@ export default function Map() {
     try {
       setIsLoading(true);
       const response = await fetch(`https://api.github.com/gists/${FIXED_GIST_ID}`);
-      
+
       if (response.ok) {
         const gist = await response.json();
         const fileContent = gist.files["adachi-markers.json"]?.content;
-        
+
         if (fileContent) {
           const loadedMarkers: MarkerData[] = JSON.parse(fileContent);
           setMarkers(loadedMarkers);
-          
+
           if (typeof window !== "undefined" && window.localStorage) {
             localStorage.setItem("adachi-map-markers", JSON.stringify(loadedMarkers));
           }
-          
+
           if (mapRef.current) {
             mapRef.current.eachLayer((layer: any) => {
               if (layer.options.icon?.options?.className === "custom-marker") {
                 mapRef.current.removeLayer(layer);
               }
             });
-            
+
             const L = await import("leaflet");
             loadedMarkers.forEach((markerData) => {
               addMarkerToMap(L, mapRef.current, markerData);
             });
           }
-          
+
           return loadedMarkers;
         }
       }
@@ -119,7 +119,7 @@ export default function Map() {
             if (savedMarkers) {
               const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
               setMarkers(parsedMarkers);
-              
+
               parsedMarkers.forEach((markerData) => {
                 addMarkerToMap(L, map, markerData);
               });
@@ -137,13 +137,13 @@ export default function Map() {
             lng: e.latlng.lng,
             comment: comment.trim(),
           };
-          
+
           const updatedMarkers = [...markers, newMarker];
           setMarkers(updatedMarkers);
           if (typeof window !== "undefined" && window.localStorage) {
             localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
           }
-          
+
           addMarkerToMap(L, map, newMarker);
           updateGist(updatedMarkers);
         }
@@ -200,7 +200,7 @@ export default function Map() {
           .custom-marker {
             cursor: pointer;
           }
-          
+
           .speech-bubble {
             position: relative;
             background: #ffffff;
@@ -212,18 +212,18 @@ export default function Map() {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             transition: transform 0.2s;
           }
-          
+
           .speech-bubble:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
           }
-          
+
           .bubble-content {
             font-size: 14px;
             color: #333;
             line-height: 1.4;
           }
-          
+
           .bubble-tail {
             position: absolute;
             bottom: -10px;
@@ -235,7 +235,7 @@ export default function Map() {
             border-right: 10px solid transparent;
             border-top: 10px solid #4A90E2;
           }
-          
+
           .bubble-tail::before {
             content: "";
             position: absolute;
@@ -247,13 +247,13 @@ export default function Map() {
             border-right: 8px solid transparent;
             border-top: 8px solid #ffffff;
           }
-          
+
           .leaflet-container {
             height: 600px;
             width: 100%;
             border-radius: 8px;
           }
-          
+
           .sync-controls {
             margin-bottom: 16px;
             padding: 16px;
@@ -261,7 +261,7 @@ export default function Map() {
             border-radius: 8px;
             border: 1px solid #e9ecef;
           }
-          
+
           .sync-button {
             background: #4A90E2;
             color: white;
@@ -273,16 +273,16 @@ export default function Map() {
             margin-bottom: 8px;
             font-size: 14px;
           }
-          
+
           .sync-button:hover:not(:disabled) {
             background: #357abd;
           }
-          
+
           .sync-button:disabled {
             background: #ccc;
             cursor: not-allowed;
           }
-          
+
           .gist-input {
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -292,7 +292,7 @@ export default function Map() {
             font-size: 14px;
             width: 200px;
           }
-          
+
           .gist-info {
             font-size: 12px;
             color: #666;
@@ -300,39 +300,39 @@ export default function Map() {
           }
         `}
       </style>
-      
+
       <div class="sync-controls">
         <h3 style="margin: 0 0 12px 0; font-size: 16px;">データ共有</h3>
         <div>
-          <button 
-            class="sync-button" 
+          <button
+            class="sync-button"
             onClick={() => updateGist(markers)}
             disabled={isLoading}
           >
             データを保存
           </button>
-          
-          <button 
-            class="sync-button" 
+
+          <button
+            class="sync-button"
             onClick={() => loadFromGist()}
             disabled={isLoading}
           >
             最新データを読み込み
           </button>
         </div>
-        
+
         <div class="gist-info">
           共有Gist: <a href={`https://gist.github.com/${FIXED_GIST_ID}`} target="_blank" rel="noopener noreferrer">
             https://gist.github.com/{FIXED_GIST_ID}
           </a>
         </div>
-        
+
         <div class="gist-info">
           マーカー数: {markers.length}個
           {isLoading && " (処理中...)"}
         </div>
       </div>
-      
+
       <div ref={mapContainerRef} class="leaflet-container" />
     </>
   );
