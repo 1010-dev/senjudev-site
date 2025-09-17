@@ -17,27 +17,26 @@ export default function Map() {
   const updateGist = async (markers: MarkerData[]) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`https://api.github.com/gists/${FIXED_GIST_ID}`, {
-        method: "PATCH",
+      
+      // Gistを更新するAPIエンドポイントを利用
+      const response = await fetch(`/api/update-gist`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          files: {
-            "adachi-markers.json": {
-              content: JSON.stringify(markers, null, 2),
-            },
-          },
+          gistId: FIXED_GIST_ID,
+          markers: markers,
         }),
       });
 
       if (response.ok) {
-        alert("Gistを更新しました");
+        console.log("Gistを更新しました");
       } else {
-        alert("Gistの更新に失敗しました");
+        console.error("Gistの更新に失敗しました");
       }
     } catch (error) {
-      alert("エラーが発生しました");
+      console.error("エラーが発生しました:", error);
     } finally {
       setIsLoading(false);
     }
