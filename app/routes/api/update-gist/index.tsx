@@ -1,20 +1,9 @@
 import { createRoute } from "honox/factory";
 
-export default createRoute(async (c) => {
-  if (c.req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
-    });
-  }
-
+export const POST = createRoute(async (c) => {
   try {
     const { gistId, markers } = await c.req.json();
-    
+
     const response = await fetch(`https://api.github.com/gists/${gistId}`, {
       method: "PATCH",
       headers: {
@@ -39,10 +28,10 @@ export default createRoute(async (c) => {
     } else {
       const errorText = await response.text();
       console.error("GitHub API Error:", response.status, errorText);
-      return c.json({ 
-        success: false, 
-        error: `GitHub API returned ${response.status}` 
-      }, { 
+      return c.json({
+        success: false,
+        error: `GitHub API returned ${response.status}`
+      }, {
         status: 500,
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -51,10 +40,10 @@ export default createRoute(async (c) => {
     }
   } catch (error) {
     console.error("API Error:", error);
-    return c.json({ 
-      success: false, 
-      error: error instanceof Error ? error.message : "Unknown error" 
-    }, { 
+    return c.json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    }, {
       status: 500,
       headers: {
         "Access-Control-Allow-Origin": "*",
