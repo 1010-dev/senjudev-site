@@ -11,6 +11,7 @@ export type VenueData = {
   events: string[];
   facilities: string[];
   access: string;
+  url?: string;
 };
 
 export const venues: VenueData[] = [
@@ -28,5 +29,6 @@ export const venues: VenueData[] = [
     events: ["千住.dev"],
     facilities: ["エアコン", "ホワイトボード"],
     access: "JR北千住駅から徒歩10分",
+    url: "https://www.geigeki.jp/access/",
   },
 ];

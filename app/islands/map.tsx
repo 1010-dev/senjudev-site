@@ -19,8 +19,8 @@ export default function Map() {
       );
 
       const map = L.map(mapContainerRef.current!, {
-        center: [35.775, 139.8],
-        zoom: 13,
+        center: [35.747983, 139.8],
+        zoom: 15,
         maxBounds: adachiBounds,
         maxBoundsViscosity: 1.0,
         minZoom: 12,
@@ -97,6 +97,15 @@ export default function Map() {
             <div class="detail-item">
               <strong>開催イベント:</strong> ${venue.events.join(", ")}
             </div>
+            ${
+              venue.url
+                ? `
+              <div class="detail-item">
+                <strong>Webサイト:</strong> <a href="${venue.url}" target="_blank" rel="noopener noreferrer" class="venue-link">${venue.url}</a>
+              </div>
+            `
+                : ""
+            }
             <div class="tags">
               ${venue.tags
                 .map((tag) => `<span class="tag">${tag}</span>`)
@@ -272,6 +281,15 @@ export default function Map() {
             height: auto;
             border-radius: 6px;
             margin-bottom: 8px;
+          }
+
+          .venue-link {
+            color: #1976d2;
+            text-decoration: none;
+          }
+
+          .venue-link:hover {
+            text-decoration: underline;
           }
         `}
       </style>
