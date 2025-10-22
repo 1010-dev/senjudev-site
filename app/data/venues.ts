@@ -29,6 +29,6 @@ export const venues: VenueData[] = [
     events: ["千住.dev"],
     facilities: ["エアコン", "ホワイトボード"],
     access: "JR北千住駅から徒歩10分",
-    url: "https://www.geigeki.jp/access/",
+    url: "https://www.art-center.jp/tokyo/",
   },
 ];
