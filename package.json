@@ -11,8 +11,10 @@
   "private": true,
   "dependencies": {
     "@mdx-js/rollup": "^3.1.0",
+    "@types/leaflet": "^1.9.20",
     "hono": "^4.7.10",
     "honox": "^0.1.40",
+    "leaflet": "^1.9.4",
     "marked": "^15.0.12",
     "rehype-pretty-code": "^0.14.1",
     "rehype-slug": "^6.0.0",
