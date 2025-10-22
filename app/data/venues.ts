@@ -24,7 +24,7 @@ export const venues: VenueData[] = [
     description:
       "多目的ホールや会議室を備えた文化施設。千住devの第一回から会場として利用されている。",
     photos: ["/tokyo-arts-center.png"],
-    capacity: 15,
+    capacity: 30,
     tags: ["会議室"],
     events: ["千住.dev"],
     facilities: ["エアコン", "ホワイトボード"],
