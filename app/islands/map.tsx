@@ -1,86 +1,9 @@
-import { useEffect, useRef, useState } from "hono/jsx";
-
-type MarkerData = {
-  id: string;
-  lat: number;
-  lng: number;
-  comment: string;
-};
+import { useEffect, useRef } from "hono/jsx";
+import { venues, type VenueData } from "../data/venues";
 
 export default function Map() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
-  const [markers, setMarkers] = useState<MarkerData[]>([]);
-  const FIXED_GIST_ID = "167f3e6e45cfc5d07df3f0dc85d65690";
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const shareData = async (markers: MarkerData[]) => {
-    try {
-      setIsLoading(true);
-      
-      // データをJSONとしてコピー用文字列を生成
-      const shareText = JSON.stringify(markers, null, 2);
-      
-      if (navigator.clipboard) {
-        await navigator.clipboard.writeText(shareText);
-        alert("マーカーデータをクリップボードにコピーしました。他のユーザーと共有してください。");
-      } else {
-        // フォールバック: テキストエリアに表示
-        const textarea = document.createElement('textarea');
-        textarea.value = shareText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert("マーカーデータをクリップボードにコピーしました。");
-      }
-    } catch (error) {
-      console.error("エラーが発生しました:", error);
-      alert("データのコピーに失敗しました");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const importData = () => {
-    const input = prompt("共有されたマーカーデータを貼り付けてください:");
-    if (input && input.trim()) {
-      try {
-        const importedMarkers: MarkerData[] = JSON.parse(input.trim());
-        
-        // 既存のマーカーをクリア
-        if (mapRef.current) {
-          mapRef.current.eachLayer((layer: any) => {
-            if (layer.options.icon?.options?.className === "custom-marker") {
-              mapRef.current.removeLayer(layer);
-            }
-          });
-        }
-        
-        setMarkers(importedMarkers);
-        
-        if (typeof window !== "undefined" && window.localStorage) {
-          localStorage.setItem("adachi-map-markers", JSON.stringify(importedMarkers));
-        }
-        
-        // 新しいマーカーを地図に追加
-        if (mapRef.current) {
-          const loadMap = async () => {
-            const L = await import("leaflet");
-            importedMarkers.forEach((markerData) => {
-              addMarkerToMap(L, mapRef.current, markerData);
-            });
-          };
-          loadMap();
-        }
-        
-        alert(`${importedMarkers.length}個のマーカーをインポートしました`);
-      } catch (error) {
-        alert("データの形式が正しくありません");
-      }
-    }
-  };
-
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -91,12 +14,12 @@ export default function Map() {
       await import("leaflet/dist/leaflet.css");
 
       const adachiBounds = L.latLngBounds(
-        L.latLng(35.7350, 139.7500),
-        L.latLng(35.8150, 139.8500)
+        L.latLng(35.735, 139.75),
+        L.latLng(35.815, 139.85)
       );
 
       const map = L.map(mapContainerRef.current!, {
-        center: [35.7750, 139.8000],
+        center: [35.775, 139.8],
         zoom: 13,
         maxBounds: adachiBounds,
         maxBoundsViscosity: 1.0,
@@ -105,73 +28,87 @@ export default function Map() {
       });
 
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution:
+          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         tileSize: 256,
         zoomOffset: 0,
       }).addTo(map);
 
-      if (typeof window !== "undefined" && window.localStorage) {
-        const savedMarkers = localStorage.getItem("adachi-map-markers");
-        if (savedMarkers) {
-          const parsedMarkers: MarkerData[] = JSON.parse(savedMarkers);
-          setMarkers(parsedMarkers);
-
-          parsedMarkers.forEach((markerData) => {
-            addMarkerToMap(L, map, markerData);
-          });
-        }
-      }
-
-      map.on("click", (e: any) => {
-        const comment = prompt("コメントを入力してください:");
-        if (comment && comment.trim()) {
-          const newMarker: MarkerData = {
-            id: Date.now().toString(),
-            lat: e.latlng.lat,
-            lng: e.latlng.lng,
-            comment: comment.trim(),
-          };
-
-          const updatedMarkers = [...markers, newMarker];
-          setMarkers(updatedMarkers);
-          if (typeof window !== "undefined" && window.localStorage) {
-            localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
-          }
-
-          addMarkerToMap(L, map, newMarker);
-        }
+      // 会場データをマップに追加
+      venues.forEach((venue) => {
+        addVenueToMap(L, map, venue);
       });
 
       mapRef.current = map;
     };
 
-    const addMarkerToMap = (L: any, map: any, markerData: MarkerData) => {
+    const addVenueToMap = (L: any, map: any, venue: VenueData) => {
       const customIcon = L.divIcon({
-        className: "custom-marker",
+        className: "venue-marker",
         html: `
-          <div class="speech-bubble" data-id="${markerData.id}">
-            <div class="bubble-content">${markerData.comment}</div>
+          <div class="venue-bubble" data-id="${venue.id}">
+            <div class="bubble-content">
+              <div class="venue-name">${venue.name}</div>
+              <div class="venue-capacity">収容人数: ${venue.capacity}名</div>
+            </div>
             <div class="bubble-tail"></div>
           </div>
         `,
-        iconSize: [200, 80],
-        iconAnchor: [100, 80],
+        iconSize: [240, 100],
+        iconAnchor: [120, 100],
       });
 
-      const marker = L.marker([markerData.lat, markerData.lng], {
+      const marker = L.marker([venue.lat, venue.lng], {
         icon: customIcon,
       }).addTo(map);
 
-      marker.on("click", () => {
-        if (confirm(`「${markerData.comment}」を削除しますか？`)) {
-          map.removeLayer(marker);
-          if (typeof window !== "undefined" && window.localStorage) {
-            const currentMarkers = JSON.parse(localStorage.getItem("adachi-map-markers") || "[]");
-            const updatedMarkers = currentMarkers.filter((m: MarkerData) => m.id !== markerData.id);
-            localStorage.setItem("adachi-map-markers", JSON.stringify(updatedMarkers));
-            setMarkers(updatedMarkers);
+      // クリックでポップアップを表示
+      const popupContent = `
+        <div class="venue-popup">
+          <h3>${venue.name}</h3>
+          ${
+            venue.photos.length > 0
+              ? `
+            <div class="venue-photos">
+              ${venue.photos
+                .map(
+                  (photo) =>
+                    `<img src="${photo}" alt="${venue.name}" class="venue-photo" />`
+                )
+                .join("")}
+            </div>
+          `
+              : ""
           }
-        }
+          <p class="venue-description">${venue.description}</p>
+          <div class="venue-details">
+            <div class="detail-item">
+              <strong>住所:</strong> ${venue.address}
+            </div>
+            <div class="detail-item">
+              <strong>アクセス:</strong> ${venue.access}
+            </div>
+            <div class="detail-item">
+              <strong>収容人数:</strong> ${venue.capacity}名
+            </div>
+            <div class="detail-item">
+              <strong>設備:</strong> ${venue.facilities.join(", ")}
+            </div>
+            <div class="detail-item">
+              <strong>開催イベント:</strong> ${venue.events.join(", ")}
+            </div>
+            <div class="tags">
+              ${venue.tags
+                .map((tag) => `<span class="tag">${tag}</span>`)
+                .join("")}
+            </div>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent, {
+        maxWidth: 400,
+        className: "venue-popup-container",
       });
     };
 
@@ -189,23 +126,23 @@ export default function Map() {
     <>
       <style>
         {`
-          .custom-marker {
+          .venue-marker {
             cursor: pointer;
           }
 
-          .speech-bubble {
+          .venue-bubble {
             position: relative;
             background: #ffffff;
             border: 2px solid #4A90E2;
             border-radius: 12px;
-            padding: 8px 12px;
-            max-width: 200px;
+            padding: 12px 16px;
+            max-width: 240px;
             word-wrap: break-word;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             transition: transform 0.2s;
           }
 
-          .speech-bubble:hover {
+          .venue-bubble:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
           }
@@ -214,6 +151,17 @@ export default function Map() {
             font-size: 14px;
             color: #333;
             line-height: 1.4;
+          }
+
+          .venue-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #4A90E2;
+          }
+
+          .venue-capacity {
+            font-size: 12px;
+            color: #666;
           }
 
           .bubble-tail {
@@ -246,7 +194,7 @@ export default function Map() {
             border-radius: 8px;
           }
 
-          .sync-controls {
+          .venue-info {
             margin-bottom: 16px;
             padding: 16px;
             background: #f8f9fa;
@@ -254,73 +202,87 @@ export default function Map() {
             border: 1px solid #e9ecef;
           }
 
-          .sync-button {
-            background: #4A90E2;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 8px;
-            margin-bottom: 8px;
+          .venue-info h3 {
+            margin: 0 0 12px 0;
+            font-size: 18px;
+            color: #333;
+          }
+
+          .venue-info p {
+            margin: 0;
             font-size: 14px;
-          }
-
-          .sync-button:hover:not(:disabled) {
-            background: #357abd;
-          }
-
-          .sync-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-          }
-
-          .gist-input {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 14px;
-            width: 200px;
-          }
-
-          .gist-info {
-            font-size: 12px;
             color: #666;
-            margin-top: 8px;
+            line-height: 1.5;
+          }
+
+          .venue-popup h3 {
+            margin: 0 0 8px 0;
+            color: #4A90E2;
+            font-size: 18px;
+          }
+
+          .venue-description {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            color: #666;
+          }
+
+          .venue-details {
+            font-size: 13px;
+          }
+
+          .detail-item {
+            margin-bottom: 6px;
+            color: #333;
+          }
+
+          .detail-item strong {
+            color: #555;
+          }
+
+          .tags {
+            margin-top: 12px;
+          }
+
+          .tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 4px;
+          }
+
+          .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+          }
+
+          .venue-popup-container .leaflet-popup-content {
+            margin: 16px;
+          }
+
+          .venue-photos {
+            margin: 12px 0;
+          }
+
+          .venue-photo {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 6px;
+            margin-bottom: 8px;
           }
         `}
       </style>
 
-      <div class="sync-controls">
-        <h3 style="margin: 0 0 12px 0; font-size: 16px;">データ共有</h3>
-        <div>
-          <button
-            class="sync-button"
-            onClick={() => shareData(markers)}
-            disabled={isLoading || markers.length === 0}
-          >
-            データをコピー
-          </button>
-
-          <button
-            class="sync-button"
-            onClick={() => importData()}
-            disabled={isLoading}
-          >
-            データをインポート
-          </button>
-        </div>
-
-        <div class="gist-info">
-          マーカー数: {markers.length}個
-          {isLoading && " (処理中...)"}
-        </div>
-        
-        <div class="gist-info">
-          「データをコピー」でマーカーデータをクリップボードにコピーし、他のユーザーと共有できます。
-        </div>
+      <div class="venue-info">
+        <h3>足立区・千住エリアの勉強会会場マップ</h3>
+        <p>
+          senju.devコミュニティで利用されている勉強会会場を表示しています。
+          各マーカーをクリックすると詳細情報が表示されます。 全{venues.length}
+          会場を掲載中。
+        </p>
       </div>
 
       <div ref={mapContainerRef} class="leaflet-container" />
