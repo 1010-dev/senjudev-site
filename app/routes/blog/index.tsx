@@ -1,3 +1,4 @@
+import { createRoute } from "honox/factory";
 import { css } from "hono/css";
 import { Navigation } from "@/components/Navigation";
 import { FC } from "hono/jsx";
@@ -195,8 +196,8 @@ const Posts: FC = () => {
   );
 };
 
-export default function BlogIndex() {
-  return (
+export default createRoute((c) => {
+  return c.render(
     <div class="bg-gray-50 min-h-screen">
       <Navigation />
       <div class={blogPageStyle}>
@@ -208,6 +209,14 @@ export default function BlogIndex() {
           <Posts />
         </div>
       </div>
-    </div>
+    </div>,
+    {
+      title: "Blog - senju.dev",
+      description: "千住エリアの技術者による技術記事。勉強会のレポート、技術Tips、コミュニティ活動の報告などを共有しています。",
+      keywords: "千住,北千住,技術ブログ,エンジニアブログ,開発者ブログ,senju.dev,tech blog",
+      ogTitle: "Blog - senju.dev",
+      ogDescription: "千住エリアの技術者による技術記事。勉強会のレポート、技術Tips、コミュニティ活動の報告などを共有しています。",
+      canonicalUrl: "https://senju.dev/blog"
+    }
   );
-}
+});

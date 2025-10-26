@@ -1,9 +1,9 @@
+import { createRoute } from "honox/factory";
 import { Navigation } from "@/components/Navigation";
 
-export default function ContributionGuide() {
-  return (
-    <>
-      <div class="bg-gray-50 min-h-screen">
+export default createRoute((c) => {
+  return c.render(
+    <div class="bg-gray-50 min-h-screen">
         <Navigation />
         <div class="max-w-4xl mx-auto px-4 py-8">
           <article class="bg-white rounded-lg shadow-lg p-8">
@@ -179,7 +179,14 @@ function hello() {
             </div>
           </article>
         </div>
-      </div>
-    </>
+    </div>,
+    {
+      title: "ブログ投稿ガイド - senju.dev",
+      description: "senju.devブログへの記事投稿方法を解説。GitHub Pull Requestを使った簡単な投稿フローで、技術記事を共有できます。",
+      keywords: "千住,senju.dev,ブログ投稿,記事投稿,技術ブログ,GitHub,Pull Request,投稿ガイド",
+      ogTitle: "ブログ投稿ガイド - senju.dev",
+      ogDescription: "senju.devブログへの記事投稿方法を解説。GitHub Pull Requestを使った簡単な投稿フローで、技術記事を共有できます。",
+      canonicalUrl: "https://senju.dev/blog/contribution-guide"
+    }
   );
-}
+});

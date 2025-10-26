@@ -2,7 +2,50 @@ import { Style } from "hono/css";
 import { jsxRenderer } from "hono/jsx-renderer";
 import { Link, Script } from "honox/server";
 
-export default jsxRenderer(({ children }) => {
+// ContextRendererインターフェースを拡張してメタデータの型を定義
+declare module 'hono' {
+  interface ContextRenderer {
+    (
+      content: string | Promise<string>,
+      props?: {
+        title?: string;
+        description?: string;
+        keywords?: string;
+        ogTitle?: string;
+        ogDescription?: string;
+        ogImage?: string;
+        ogType?: string;
+        canonicalUrl?: string;
+      }
+    ): Response | Promise<Response>
+  }
+}
+
+export default jsxRenderer(({ children, title, description, keywords, ogTitle, ogDescription, ogImage, ogType, canonicalUrl }) => {
+  // デフォルト値
+  const defaultMeta = {
+    title: "千住.dev - 千住エリア技術者コミュニティ",
+    description: "千住エリアを中心とした足立区で活動する技術者のためのコミュニティです。定期的な勉強会やもくもく会を開催しています。",
+    keywords: "千住,北千住,南千住,足立区,開発者,エンジニア,プログラマー,コミュニティ,勉強会,もくもく会,senju.dev",
+    ogTitle: "千住.dev - 千住エリア技術者コミュニティ",
+    ogDescription: "千住エリアを中心とした足立区で活動する技術者のためのコミュニティです。",
+    ogImage: "https://senju.dev/og-image.jpg",
+    ogType: "website",
+    canonicalUrl: "https://senju.dev"
+  };
+
+  // ページ固有のメタデータとデフォルトをマージ
+  const meta = {
+    title: title || defaultMeta.title,
+    description: description || defaultMeta.description,
+    keywords: keywords || defaultMeta.keywords,
+    ogTitle: ogTitle || defaultMeta.ogTitle,
+    ogDescription: ogDescription || defaultMeta.ogDescription,
+    ogImage: ogImage || defaultMeta.ogImage,
+    ogType: ogType || defaultMeta.ogType,
+    canonicalUrl: canonicalUrl || defaultMeta.canonicalUrl
+  };
+
   return (
     <html lang="ja">
       <head>
@@ -10,30 +53,30 @@ export default jsxRenderer(({ children }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         {/* 基本メタデータ */}
-        <title>千住.dev - 千住エリア技術者コミュニティ</title>
-        <meta name="description" content="千住エリアを中心とした足立区で活動する技術者のためのコミュニティです。定期的な勉強会やもくもく会を開催しています。" />
-        <meta name="keywords" content="千住,北千住,南千住,足立区,開発者,エンジニア,プログラマー,コミュニティ,勉強会,もくもく会,senju.dev" />
+        <title>{meta.title}</title>
+        <meta name="description" content={meta.description} />
+        <meta name="keywords" content={meta.keywords} />
         <meta name="author" content="senju.dev community" />
 
         {/* OGPタグ */}
-        <meta property="og:title" content="千住.dev - 千住エリア技術者コミュニティ" />
-        <meta property="og:description" content="千住エリアを中心とした足立区で活動する技術者のためのコミュニティです。" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://senju.dev" />
-        <meta property="og:image" content="https://senju.dev/og-image.jpg" />
+        <meta property="og:title" content={meta.ogTitle} />
+        <meta property="og:description" content={meta.ogDescription} />
+        <meta property="og:type" content={meta.ogType} />
+        <meta property="og:url" content={meta.canonicalUrl} />
+        <meta property="og:image" content={meta.ogImage} />
         <meta property="og:site_name" content="senju.dev" />
         <meta property="og:locale" content="ja_JP" />
 
         {/* Twitter Cardタグ */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="千住.dev - 千住エリア技術者コミュニティ" />
-        <meta name="twitter:description" content="千住エリアを中心とした足立区で活動する技術者のためのコミュニティです。" />
-        <meta name="twitter:image" content="https://senju.dev/og-image.jpg" />
+        <meta name="twitter:title" content={meta.ogTitle} />
+        <meta name="twitter:description" content={meta.ogDescription} />
+        <meta name="twitter:image" content={meta.ogImage} />
 
         {/* その他のメタタグ */}
         <meta name="theme-color" content="#374151" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://senju.dev" />
+        <link rel="canonical" href={meta.canonicalUrl} />
 
         {/* ファビコン */}
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
