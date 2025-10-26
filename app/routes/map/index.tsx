@@ -12,6 +12,14 @@ export default createRoute((c) => {
           <Map />
         </div>
       </main>
-    </div>
+    </div>,
+    {
+      title: "足立区マップ - senju.dev",
+      description: "千住エリアを中心とした足立区の地図。コミュニティメンバーの活動拠点やおすすめスポットを確認できます。",
+      keywords: "千住,北千住,足立区,マップ,地図,senju.dev,コミュニティマップ",
+      ogTitle: "足立区マップ - senju.dev",
+      ogDescription: "千住エリアを中心とした足立区の地図。コミュニティメンバーの活動拠点やおすすめスポットを確認できます。",
+      canonicalUrl: "https://senju.dev/map"
+    }
   );
 });
