@@ -1,4 +1,4 @@
-import { DiscordIcon, ConnpassIcon } from "./icons";
+import { DiscordIcon, ConnpassIcon, BuyMeCoffeeIcon } from "./icons";
 
 export function Navigation() {
   return (
@@ -38,6 +38,15 @@ export function Navigation() {
         >
           <ConnpassIcon className="w-5 h-5" />
           <span class="hidden sm:inline">connpass</span>
+        </a>
+        <a
+          href="https://buymeacoffee.com/senjudev"
+          class="text-gray-700 hover:text-gray-900 font-medium transition-colors flex items-center gap-2"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <BuyMeCoffeeIcon className="w-5 h-5" />
+          <span class="hidden sm:inline">Support</span>
         </a>
       </div>
     </nav>
