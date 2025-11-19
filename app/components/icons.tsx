@@ -16,14 +16,29 @@ export function DiscordIcon({ className = "w-5 h-5" }: { className?: string }) {
 // Connpass SVG Icon (simplified calendar/event icon)
 export function ConnpassIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
-    <svg 
-      className={className} 
-      viewBox="0 0 24 24" 
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
       fill="currentColor"
       role="img"
       aria-label="connpass"
     >
       <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+    </svg>
+  );
+}
+
+// Buy Me a Coffee SVG Icon
+export function BuyMeCoffeeIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      role="img"
+      aria-label="Buy Me a Coffee"
+    >
+      <path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/>
     </svg>
   );
 }
